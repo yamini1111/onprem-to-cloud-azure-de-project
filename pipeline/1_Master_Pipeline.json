@@ -1,6 +1,24 @@
 {
 	"name": "1_Master_Pipeline",
 	"properties": {
+		"activities": [
+			{
+				"name": "execute_2_copy_hydration_file",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "2_Hydration_file_movement",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
 		"annotations": []
 	}
 }
