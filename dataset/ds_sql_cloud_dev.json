@@ -1,0 +1,19 @@
+{
+	"name": "ds_sql_cloud_dev",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_kv_azsql",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"username": "sqladmin"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "schclouddev",
+			"table": "tablelist"
+		}
+	}
+}

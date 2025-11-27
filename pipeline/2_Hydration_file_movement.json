@@ -3,9 +3,16 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "copy_hydration_file_from_sharepoint",
+				"name": "copy_hydration_file_from_sharepoint_to_dl",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "set_folder_path",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -56,11 +63,103 @@
 				"outputs": [
 					{
 						"referenceName": "ds_hydration",
+						"type": "DatasetReference",
+						"parameters": {
+							"folderPath": {
+								"value": "@variables('folderPath')",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "copy_hydration_file_from_dl_to_table",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "copy_hydration_file_from_sharepoint_to_dl",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": "truncate table schclouddev.tablelist",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_hydration",
+						"type": "DatasetReference",
+						"parameters": {
+							"folderPath": {
+								"value": "@variables('folderPath')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_sql_cloud_dev",
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "set_folder_path",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "folderPath",
+					"value": "@concat(substring(utcNow(),0 ,4 ),'/',substring(utcNow(),5 ,2 ),'/',substring(utcNow(), 8, 2))"
+				}
 			}
 		],
+		"variables": {
+			"folderPath": {
+				"type": "String"
+			}
+		},
 		"annotations": []
 	}
 }
