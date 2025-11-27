@@ -1,0 +1,44 @@
+{
+	"name": "ds_sharepoint",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_adls_conn",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "HydrationFile.csv",
+				"fileSystem": "sharepoint"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "sno",
+				"type": "String"
+			},
+			{
+				"name": "sourceSchema",
+				"type": "String"
+			},
+			{
+				"name": "sourceTableName",
+				"type": "String"
+			},
+			{
+				"name": "LoadType",
+				"type": "String"
+			},
+			{
+				"name": "Status",
+				"type": "String"
+			}
+		]
+	}
+}

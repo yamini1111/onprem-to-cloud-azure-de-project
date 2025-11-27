@@ -1,0 +1,27 @@
+{
+	"name": "ds_hydration",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_adls_conn",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "HydrationFile.csv",
+				"folderPath": {
+					"value": "@concat(substring(utcNow(),0 ,4 ),'/',substring(utcNow(),5 ,2 ),'/',substring(utcNow(), 8, 2))",
+					"type": "Expression"
+				},
+				"fileSystem": "hydrationfile"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
