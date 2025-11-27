@@ -1,0 +1,9 @@
+{
+	"name": "adf-onprem-to-cloud-migration",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "2f7b1701-2717-492a-a19f-d88d74b81e5a",
+		"tenantId": "3e31a431-5a36-4701-b155-08c7738be563"
+	}
+}
