@@ -2,12 +2,30 @@
 	"name": "ls_sql_server_onprem",
 	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
+		"parameters": {
+			"onprem_sql_server": {
+				"type": "string",
+				"defaultValue": "LAPTOP-LNP9KF2M"
+			},
+			"onprem_sql_db": {
+				"type": "string",
+				"defaultValue": "dbonpremdev"
+			},
+			"onprem_sql_username": {
+				"type": "string",
+				"defaultValue": "LAPTOP-LNP9KF2M\\Yamini"
+			},
+			"onprem_sql_password": {
+				"type": "string",
+				"defaultValue": "Yamini@1999"
+			}
+		},
 		"annotations": [],
 		"type": "SqlServer",
 		"typeProperties": {
-			"connectionString": "integrated security=True;data source=LAPTOP-LNP9KF2M;initial catalog=dbonpremdev",
-			"userName": "LAPTOP-LNP9KF2M\\Yamini",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJhYzIzYmE1Yy04MDM4LTRjZjAtOGM1MC1jMDU3ZDg4NjQ5OGMiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"connectionString": "integrated security=True;Data Source=@{linkedService().onprem_sql_server};Initial Catalog=@{linkedService().onprem_sql_db}",
+			"userName": "@{linkedService().onprem_sql_username}",
+			"password": "@{linkedService().onprem_sql_password}"
 		},
 		"connectVia": {
 			"referenceName": "SHIR-Onprem-to-cloud",
