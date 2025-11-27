@@ -1,0 +1,29 @@
+{
+	"name": "AzureSqlDatabase1",
+	"properties": {
+		"parameters": {
+			"usename": {
+				"type": "string",
+				"defaultValue": "sqladmin"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"server": "azsql-onprem-to-sql.database.windows.net",
+			"database": "azsql-db",
+			"encrypt": "mandatory",
+			"trustServerCertificate": false,
+			"authenticationType": "SQL",
+			"userName": "@{linkedService().usename}",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "ls_azkv_onprem",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "akvs-azsql-password"
+			}
+		}
+	}
+}
