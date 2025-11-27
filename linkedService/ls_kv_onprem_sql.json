@@ -1,6 +1,12 @@
 {
 	"name": "ls_kv_onprem_sql",
 	"properties": {
+		"parameters": {
+			"akv_dev_conn_str": {
+				"type": "string",
+				"defaultValue": "akvs-onpremsql-conn-str"
+			}
+		},
 		"annotations": [],
 		"type": "SqlServer",
 		"typeProperties": {
@@ -10,7 +16,10 @@
 					"referenceName": "ls_azkv_onprem",
 					"type": "LinkedServiceReference"
 				},
-				"secretName": "akvs-onpremsql-conn-str"
+				"secretName": {
+					"value": "@linkedService().akv_dev_conn_str",
+					"type": "Expression"
+				}
 			}
 		},
 		"connectVia": {
