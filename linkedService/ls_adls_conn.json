@@ -1,0 +1,10 @@
+{
+	"name": "ls_adls_conn",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://sgonpremtocloud.dfs.core.windows.net/"
+		}
+	}
+}
