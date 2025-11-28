@@ -119,6 +119,39 @@
 						}
 					}
 				}
+			},
+			{
+				"name": "execute_5_incremantal_load",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "filter_incremental_load_tables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "5_Incremental_load",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"incLoadTables": {
+							"value": "@activity('filter_incremental_load_tables').output.value",
+							"type": "Expression"
+						},
+						"bronzeContainer": {
+							"value": "@pipeline().parameters.bronzeContainer",
+							"type": "Expression"
+						}
+					}
+				}
 			}
 		],
 		"parameters": {
