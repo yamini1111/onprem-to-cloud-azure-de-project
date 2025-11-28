@@ -57,7 +57,13 @@
 				"inputs": [
 					{
 						"referenceName": "ds_sharepoint",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"containerName": {
+								"value": "@pipeline().parameters.sharepointFolder",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [

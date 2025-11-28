@@ -15,7 +15,17 @@
 						"referenceName": "2_Hydration_file_movement",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"sharepointFolder": {
+							"value": "@variables('sharepointContainer')",
+							"type": "Expression"
+						},
+						"hydrationFileName": {
+							"value": "@variables('hydFileName')",
+							"type": "Expression"
+						}
+					}
 				}
 			}
 		],
