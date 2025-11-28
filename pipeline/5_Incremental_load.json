@@ -1,6 +1,106 @@
 {
 	"name": "5_Incremental_load",
 	"properties": {
+		"activities": [
+			{
+				"name": "ForEach_incremental_load",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.incLoadTables",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "copy_incremental_load_tables_to_dl",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_onprem_sql",
+									"type": "DatasetReference",
+									"parameters": {
+										"schema": {
+											"value": "@item().sourceSchema",
+											"type": "Expression"
+										},
+										"table": {
+											"value": "@item().sourceTableName",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ds_adls_csv_load_tables",
+									"type": "DatasetReference",
+									"parameters": {
+										"container": {
+											"value": "@pipeline().parameters.bronzeContainer",
+											"type": "Expression"
+										},
+										"folderPath": {
+											"value": "@concat(substring(utcNow(), 0,4),'/',\n        substring(utcNow(), 5,2 ),'/',\n        substring(utcNow(), 8,2 ))",
+											"type": "Expression"
+										},
+										"fileName": {
+											"value": "@concat(item().sourceSchema,'_',\n        item().sourceTableName,'.csv')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"incLoadTables": {
+				"type": "array"
+			},
+			"bronzeContainer": {
+				"type": "string"
+			}
+		},
 		"annotations": []
 	}
 }
