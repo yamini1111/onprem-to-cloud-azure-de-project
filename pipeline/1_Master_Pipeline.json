@@ -73,7 +73,17 @@
 					},
 					"dataset": {
 						"referenceName": "ds_adls_json",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"containerName": {
+								"value": "@variables('sharepointContainer')",
+								"type": "Expression"
+							},
+							"fileName": {
+								"value": "@variables('confFile')",
+								"type": "Expression"
+							}
+						}
 					},
 					"firstRowOnly": false
 				}
