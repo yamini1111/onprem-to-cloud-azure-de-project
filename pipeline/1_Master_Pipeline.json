@@ -25,23 +25,23 @@
 					"waitOnCompletion": true,
 					"parameters": {
 						"sharepointContainer": {
-							"value": "@activity('lkp_conf_json').output.value.sharepointContainer",
+							"value": "@activity('lkp_conf_json').output.value[0].sharepointContainer",
 							"type": "Expression"
 						},
 						"hydrationFileName": {
-							"value": "@activity('lkp_conf_json').output.value.hydFileName",
+							"value": "@activity('lkp_conf_json').output.value[0].hydFileName",
 							"type": "Expression"
 						},
 						"hydrationContainer": {
-							"value": "@activity('lkp_conf_json').output.value.hydContainer",
+							"value": "@activity('lkp_conf_json').output.value[0].hydContainer",
 							"type": "Expression"
 						},
 						"azsqlSchema": {
-							"value": "@activity('lkp_conf_json').output.value.azsqlschema",
+							"value": "@activity('lkp_conf_json').output.value[0].azsqlschema",
 							"type": "Expression"
 						},
 						"azSqlTablelist": {
-							"value": "@activity('lkp_conf_json').output.value.tablelist",
+							"value": "@activity('lkp_conf_json').output.value[0].tablelist",
 							"type": "Expression"
 						}
 					}
