@@ -5,8 +5,6 @@
 			{
 				"name": "execute_2_copy_hydration_file",
 				"type": "ExecutePipeline",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "lkp_conf_json",
