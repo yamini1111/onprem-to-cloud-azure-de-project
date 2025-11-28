@@ -42,7 +42,7 @@
 								"source": {
 									"type": "SqlServerSource",
 									"sqlReaderQuery": {
-										"value": "select * from @{item().sourceSchema}.@{item().sourceTableName}\nwhere ModifiedDate > @{concat('''',activity('lkp_fetch_watermark').output.value[0].watermarkDateTime,'''')} and ModifiedDate <= @{concat('''',activity('lkp_fetch_max_modifiedDate').output.value[0].max_modifiedDateTime,'''')} ",
+										"value": "select * from @{item().sourceSchema}.@{item().sourceTableName}\nwhere ModifiedDate > @{concat('''',if(\n    equals(activity('lkp_fetch_watermark').output.count, 0),'1900-01-01 00:00:00',activity('lkp_fetch_watermark').output.value[0].watermarkDateTime),'''')} \n    and ModifiedDate <= @{concat('''',activity('lkp_fetch_max_modifiedDate').output.value[0].max_modifiedDateTime,'''')} ",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
@@ -219,7 +219,7 @@
 									{
 										"type": "Query",
 										"text": {
-											"value": "update @{pipeline().parameters.azsqlSchema}.@{pipeline().parameters.azsqlWatermarktbl} \n    set watermarkDateTime = activity('lkp_fetch_max_modifiedDate').output.value[0].max_modifiedDateTime where tablename = @{concat('''',item().sourceTableName,'''')}",
+											"value": "update @{pipeline().parameters.azsqlSchema}.@{pipeline().parameters.azsqlWatermarktbl} \n    set watermarkDateTime = @{activity('lkp_fetch_max_modifiedDate').output.value[0].max_modifiedDateTime} where tablename = @{concat('''',item().sourceTableName,'''')}",
 											"type": "Expression"
 										}
 									}
