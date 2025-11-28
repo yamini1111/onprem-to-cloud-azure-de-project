@@ -158,6 +158,14 @@
 				}
 			}
 		],
+		"parameters": {
+			"sharepointFolder": {
+				"type": "string"
+			},
+			"hydrationFileName": {
+				"type": "string"
+			}
+		},
 		"variables": {
 			"folderPath": {
 				"type": "String"
