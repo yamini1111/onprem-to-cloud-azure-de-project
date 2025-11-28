@@ -5,15 +5,35 @@
 			"referenceName": "ls_kv_azsql",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"username": "sqladmin"
+				"username": {
+					"value": "@dataset().username",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"username": {
+				"type": "string"
+			},
+			"schema": {
+				"type": "string"
+			},
+			"table": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": "schclouddev",
-			"table": "tablelist"
+			"schema": {
+				"value": "@dataset().schema",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().table",
+				"type": "Expression"
+			}
 		}
 	}
 }

@@ -43,6 +43,10 @@
 						"azSqlTablelist": {
 							"value": "@activity('lkp_conf_json').output.value[0].tablelist",
 							"type": "Expression"
+						},
+						"azsqlUsername": {
+							"value": "@activity('lkp_conf_json').output.value[0].azsqlUsername",
+							"type": "Expression"
 						}
 					}
 				}
@@ -102,6 +106,9 @@
 				"type": "String"
 			},
 			"tablelistName": {
+				"type": "String"
+			},
+			"azsqlUsername": {
 				"type": "String"
 			}
 		},
