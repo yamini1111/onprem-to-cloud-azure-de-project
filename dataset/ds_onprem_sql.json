@@ -1,0 +1,23 @@
+{
+	"name": "ds_onprem_sql",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_kv_onprem_sql",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"akv_dev_conn_str": "akvs-onpremsql-conn-str"
+			}
+		},
+		"parameters": {
+			"schema": {
+				"type": "string"
+			},
+			"table": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	}
+}
