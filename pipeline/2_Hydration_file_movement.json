@@ -62,6 +62,10 @@
 							"containerName": {
 								"value": "@pipeline().parameters.sharepointFolder",
 								"type": "Expression"
+							},
+							"hydFileName": {
+								"value": "@pipeline().parameters.hydrationFileName",
+								"type": "Expression"
 							}
 						}
 					}
