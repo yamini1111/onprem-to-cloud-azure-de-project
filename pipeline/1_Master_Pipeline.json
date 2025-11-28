@@ -61,7 +61,17 @@
 					},
 					"dataset": {
 						"referenceName": "ds_adls",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"containerName": {
+								"value": "@variables('sharepointContainer')",
+								"type": "Expression"
+							},
+							"fileName": {
+								"value": "@variables('confFile')",
+								"type": "Expression"
+							}
+						}
 					}
 				}
 			}
@@ -74,6 +84,10 @@
 			"hydFileName": {
 				"type": "String",
 				"defaultValue": "HydrationFile.csv"
+			},
+			"confFile": {
+				"type": "String",
+				"defaultValue": "conf.json"
 			}
 		},
 		"annotations": []
