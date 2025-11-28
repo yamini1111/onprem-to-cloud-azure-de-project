@@ -219,7 +219,7 @@
 									{
 										"type": "Query",
 										"text": {
-											"value": "update @{pipeline().parameters.azsqlSchema}.@{pipeline().parameters.azsqlWatermarktbl} \n    set watermarkDateTime = @{activity('lkp_fetch_max_modifiedDate').output.value[0].max_modifiedDateTime} where tablename = @{concat('''',item().sourceTableName,'''')}",
+											"value": "update @{pipeline().parameters.azsqlSchema}.@{pipeline().parameters.azsqlWatermarktbl} \n    set watermarkDateTime = @{concat('''',activity('lkp_fetch_max_modifiedDate').output.value[0].max_modifiedDateTime,'''')} where tablename = @{concat('''',item().sourceTableName,'''')}",
 											"type": "Expression"
 										}
 									}
