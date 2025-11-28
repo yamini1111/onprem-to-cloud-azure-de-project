@@ -60,14 +60,13 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"containerName": {
-								"value": "@pipeline().parameters.sharepointFolder",
+								"value": "@pipeline().parameters.sharepointContainer",
 								"type": "Expression"
 							},
 							"fileName": {
 								"value": "@pipeline().parameters.hydrationFileName",
 								"type": "Expression"
-							},
-							"folderPath": "''"
+							}
 						}
 					}
 				],
@@ -78,6 +77,14 @@
 						"parameters": {
 							"folderPath": {
 								"value": "@variables('folderPath')",
+								"type": "Expression"
+							},
+							"container": {
+								"value": "@pipeline().parameters.hydrationContainer",
+								"type": "Expression"
+							},
+							"fileName": {
+								"value": "@pipeline().parameters.hydrationFileName",
 								"type": "Expression"
 							}
 						}
@@ -117,7 +124,10 @@
 					},
 					"sink": {
 						"type": "AzureSqlSink",
-						"preCopyScript": "truncate table schclouddev.tablelist",
+						"preCopyScript": {
+							"value": "truncate table @{pipeline().parameters.azsqlSchema}.@{pipeline().parameters.azSqlTablelist}",
+							"type": "Expression"
+						},
 						"writeBehavior": "insert",
 						"sqlWriterUseTableLock": false,
 						"disableMetricsCollection": false
@@ -139,6 +149,10 @@
 						"parameters": {
 							"folderPath": {
 								"value": "@variables('folderPath')",
+								"type": "Expression"
+							},
+							"container": {
+								"value": "@pipeline().parameters.hydrationContainer",
 								"type": "Expression"
 							}
 						}
@@ -170,10 +184,19 @@
 			}
 		],
 		"parameters": {
-			"sharepointFolder": {
+			"sharepointContainer": {
 				"type": "string"
 			},
 			"hydrationFileName": {
+				"type": "string"
+			},
+			"hydrationContainer": {
+				"type": "string"
+			},
+			"azsqlSchema": {
+				"type": "string"
+			},
+			"azSqlTablelist": {
 				"type": "string"
 			}
 		},

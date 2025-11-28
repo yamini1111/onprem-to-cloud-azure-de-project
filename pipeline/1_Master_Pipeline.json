@@ -24,12 +24,24 @@
 					},
 					"waitOnCompletion": true,
 					"parameters": {
-						"sharepointFolder": {
-							"value": "@variables('sharepointContainer')",
+						"sharepointContainer": {
+							"value": "@activity('lkp_conf_json').output.value.sharepointContainer",
 							"type": "Expression"
 						},
 						"hydrationFileName": {
-							"value": "@variables('hydFileName')",
+							"value": "@activity('lkp_conf_json').output.value.hydFileName",
+							"type": "Expression"
+						},
+						"hydrationContainer": {
+							"value": "@activity('lkp_conf_json').output.value.hydContainer",
+							"type": "Expression"
+						},
+						"azsqlSchema": {
+							"value": "@activity('lkp_conf_json').output.value.azsqlschema",
+							"type": "Expression"
+						},
+						"azSqlTablelist": {
+							"value": "@activity('lkp_conf_json').output.value.tablelist",
 							"type": "Expression"
 						}
 					}
@@ -72,7 +84,8 @@
 								"type": "Expression"
 							}
 						}
-					}
+					},
+					"firstRowOnly": false
 				}
 			}
 		],
@@ -81,13 +94,15 @@
 				"type": "String",
 				"defaultValue": "sharepoint"
 			},
-			"hydFileName": {
-				"type": "String",
-				"defaultValue": "HydrationFile.csv"
-			},
 			"confFile": {
 				"type": "String",
 				"defaultValue": "conf.json"
+			},
+			"schemaName": {
+				"type": "String"
+			},
+			"tablelistName": {
+				"type": "String"
 			}
 		},
 		"annotations": []
