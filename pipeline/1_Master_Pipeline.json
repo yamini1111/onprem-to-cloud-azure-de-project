@@ -5,6 +5,8 @@
 			{
 				"name": "execute_2_copy_hydration_file",
 				"type": "ExecutePipeline",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "lkp_conf_json",
@@ -90,6 +92,47 @@
 						}
 					},
 					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "execute_3_data_load_from_onpremise",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "execute_2_copy_hydration_file",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "3_Data_Load_from_Onpremise",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"azsqlUsername": {
+							"value": "@activity('lkp_conf_json').output.value[0].azsqlUsername",
+							"type": "Expression"
+						},
+						"azsqlSchema": {
+							"value": "@activity('lkp_conf_json').output.value[0].azsqlschema",
+							"type": "Expression"
+						},
+						"azsqlTable": {
+							"value": "@activity('lkp_conf_json').output.value[0].tablelist",
+							"type": "Expression"
+						},
+						"bronzeContainer": {
+							"value": "@activity('lkp_conf_json').output.value[0].bronzeContainer",
+							"type": "Expression"
+						}
+					}
 				}
 			}
 		],

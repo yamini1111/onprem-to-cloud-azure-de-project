@@ -55,13 +55,37 @@
 							"inputs": [
 								{
 									"referenceName": "ds_onprem_sql",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"schema": {
+											"value": "@item().sourceSchema",
+											"type": "Expression"
+										},
+										"table": {
+											"value": "@item().sourceTableName",
+											"type": "Expression"
+										}
+									}
 								}
 							],
 							"outputs": [
 								{
 									"referenceName": "ds_adls_csv_load_tables",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"container": {
+											"value": "@pipeline().parameters.bronzeContainer",
+											"type": "Expression"
+										},
+										"folderPath": {
+											"value": "@concat(substring(utcNow(), 0,4),'/',\n        substring(utcNow(), 5,2 ),'/',\n        substring(utcNow(), 8,2 ))",
+											"type": "Expression"
+										},
+										"fileName": {
+											"value": "@concat(item().sourceSchema,'_',\n        item().sourceTableName,'.csv')",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						}
@@ -72,6 +96,9 @@
 		"parameters": {
 			"fullLoadTables": {
 				"type": "array"
+			},
+			"bronzeContainer": {
+				"type": "string"
 			}
 		},
 		"annotations": []

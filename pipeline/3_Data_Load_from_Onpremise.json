@@ -22,7 +22,21 @@
 					},
 					"dataset": {
 						"referenceName": "ds_sql_cloud_dev",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"username": {
+								"value": "@pipeline().parameters.azsqlUsername",
+								"type": "Expression"
+							},
+							"schema": {
+								"value": "@pipeline().parameters.azsqlSchema",
+								"type": "Expression"
+							},
+							"table": {
+								"value": "@pipeline().parameters.azsqlTable",
+								"type": "Expression"
+							}
+						}
 					},
 					"firstRowOnly": false
 				}
@@ -72,8 +86,55 @@
 						"type": "Expression"
 					}
 				}
+			},
+			{
+				"name": "execute_4_full_load",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "filter_full_load_tables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "4_Full_load",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"fullLoadTables": {
+							"value": "@activity('filter_full_load_tables').output.value",
+							"type": "Expression"
+						},
+						"bronzeContainer": {
+							"value": "@pipeline().parameters.bronzeContainer",
+							"type": "Expression"
+						}
+					}
+				}
 			}
 		],
+		"parameters": {
+			"azsqlUsername": {
+				"type": "string"
+			},
+			"azsqlSchema": {
+				"type": "string"
+			},
+			"azsqlTable": {
+				"type": "string"
+			},
+			"bronzeContainer": {
+				"type": "string"
+			}
+		},
 		"annotations": []
 	}
 }
