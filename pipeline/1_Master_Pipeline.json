@@ -5,9 +5,11 @@
 			{
 				"name": "execute_2_copy_hydration_file",
 				"type": "ExecutePipeline",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
-						"activity": "lkp_conf_json",
+						"activity": "lkp_starting_logs",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -136,6 +138,48 @@
 						}
 					}
 				}
+			},
+			{
+				"name": "lkp_starting_logs",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "lkp_conf_json",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": {
+							"value": "@activity('lkp_conf_json').output.value[0].azsqlStartLogsProc",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_azsql_call_proc",
+						"type": "DatasetReference",
+						"parameters": {
+							"username": {
+								"value": "@activity('lkp_conf_json').output.value[0].azsqlUsername",
+								"type": "Expression"
+							}
+						}
+					},
+					"firstRowOnly": false
+				}
 			}
 		],
 		"variables": {
@@ -154,6 +198,24 @@
 				"type": "String"
 			},
 			"azsqlUsername": {
+				"type": "String",
+				"defaultValue": "sqladmin"
+			},
+			"statusSuccess": {
+				"type": "String",
+				"defaultValue": "Success"
+			},
+			"statusFail": {
+				"type": "String",
+				"defaultValue": "Failed"
+			},
+			"adfLogsTbl": {
+				"type": "String"
+			},
+			"StartLogsProc": {
+				"type": "String"
+			},
+			"EndLogsProc": {
 				"type": "String"
 			}
 		},
