@@ -1,0 +1,23 @@
+{
+	"name": "ds_azsql_call_proc",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_kv_azsql",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"username": {
+					"value": "@dataset().username",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"username": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
