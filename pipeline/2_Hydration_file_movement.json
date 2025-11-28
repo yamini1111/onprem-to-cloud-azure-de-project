@@ -56,14 +56,14 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_sharepoint",
+						"referenceName": "ds_adls",
 						"type": "DatasetReference",
 						"parameters": {
 							"containerName": {
 								"value": "@pipeline().parameters.sharepointFolder",
 								"type": "Expression"
 							},
-							"hydFileName": {
+							"fileName": {
 								"value": "@pipeline().parameters.hydrationFileName",
 								"type": "Expression"
 							}

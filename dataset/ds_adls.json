@@ -1,5 +1,5 @@
 {
-	"name": "ds_sharepoint",
+	"name": "ds_adls",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_adls_conn",
@@ -9,7 +9,7 @@
 			"containerName": {
 				"type": "string"
 			},
-			"hydFileName": {
+			"fileName": {
 				"type": "string"
 			}
 		},
@@ -19,7 +19,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "@dataset().hydFileName",
+					"value": "@dataset().fileName",
 					"type": "Expression"
 				},
 				"fileSystem": {
@@ -32,27 +32,6 @@
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
 		},
-		"schema": [
-			{
-				"name": "sno",
-				"type": "String"
-			},
-			{
-				"name": "sourceSchema",
-				"type": "String"
-			},
-			{
-				"name": "sourceTableName",
-				"type": "String"
-			},
-			{
-				"name": "LoadType",
-				"type": "String"
-			},
-			{
-				"name": "Status",
-				"type": "String"
-			}
-		]
+		"schema": []
 	}
 }
