@@ -61,29 +61,19 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "DelimitedTextSource",
+						"type": "JsonSource",
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
+							"type": "JsonReadSettings"
 						}
 					},
 					"dataset": {
-						"referenceName": "ds_adls",
-						"type": "DatasetReference",
-						"parameters": {
-							"containerName": {
-								"value": "@variables('sharepointContainer')",
-								"type": "Expression"
-							},
-							"fileName": {
-								"value": "@variables('confFile')",
-								"type": "Expression"
-							}
-						}
+						"referenceName": "ds_adls_json",
+						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
 				}
