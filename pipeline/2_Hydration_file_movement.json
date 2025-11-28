@@ -5,8 +5,6 @@
 			{
 				"name": "copy_hydration_file_from_sharepoint_to_dl",
 				"type": "Copy",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "set_folder_path",
@@ -169,6 +167,10 @@
 						"referenceName": "ds_sql_cloud_dev",
 						"type": "DatasetReference",
 						"parameters": {
+							"username": {
+								"value": "@pipeline().parameters.azsqlUsername",
+								"type": "Expression"
+							},
 							"schema": {
 								"value": "@pipeline().parameters.azsqlSchema",
 								"type": "Expression"
