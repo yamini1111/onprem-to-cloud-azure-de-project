@@ -5,13 +5,27 @@
 			"referenceName": "ls_adls_conn",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"containerName": {
+				"type": "string"
+			},
+			"hydFileName": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "HydrationFile.csv",
-				"fileSystem": "sharepoint"
+				"fileName": {
+					"value": "@dataset().hydFileName",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().containerName",
+					"type": "Expression"
+				}
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",

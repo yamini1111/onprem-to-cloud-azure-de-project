@@ -19,6 +19,16 @@
 				}
 			}
 		],
+		"variables": {
+			"sharepointContainer": {
+				"type": "String",
+				"defaultValue": "sharepoint"
+			},
+			"hydFileName": {
+				"type": "String",
+				"defaultValue": "HydrationFile.csv"
+			}
+		},
 		"annotations": []
 	}
 }
