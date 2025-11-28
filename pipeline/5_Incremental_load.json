@@ -16,7 +16,20 @@
 						{
 							"name": "copy_incremental_load_tables_to_dl",
 							"type": "Copy",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "lkp_fetch_watermark",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "lkp_fetch_max_modifiedDate",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"policy": {
 								"timeout": "0.12:00:00",
 								"retry": 0,
@@ -28,6 +41,10 @@
 							"typeProperties": {
 								"source": {
 									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "select * from @{item().sourceSchema}.@{item().sourceTableName}\nwhere ModifiedDate > @{concat('''',activity('lkp_fetch_watermark').output.value[0].watermarkDateTime,'''')} and ModifiedDate <= @{concat('''',activity('lkp_fetch_max_modifiedDate').output.value[0].max_modifiedDateTime,'''')} ",
+										"type": "Expression"
+									},
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
@@ -88,6 +105,127 @@
 									}
 								}
 							]
+						},
+						{
+							"name": "lkp_fetch_watermark",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": "select watermarkDateTime from @{pipeline().parameters.azsqlSchema}.@{pipeline().parameters.azsqlWatermarktbl}\nwhere tablename = @{concat('''',item().sourceTableName,'''')}",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "ds_sql_cloud_dev",
+									"type": "DatasetReference",
+									"parameters": {
+										"username": {
+											"value": "@pipeline().parameters.azsqlUsername",
+											"type": "Expression"
+										},
+										"schema": {
+											"value": "@pipeline().parameters.azsqlSchema",
+											"type": "Expression"
+										},
+										"table": {
+											"value": "@pipeline().parameters.azsqlWatermarktbl",
+											"type": "Expression"
+										}
+									}
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "lkp_fetch_max_modifiedDate",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "select max(ModifiedDate) max_modifiedDateTime from \n@{concat(item().sourceSchema,'.',item().sourceTableName)}",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "ds_onprem_sql",
+									"type": "DatasetReference",
+									"parameters": {
+										"schema": {
+											"value": "@item().sourceSchema",
+											"type": "Expression"
+										},
+										"table": {
+											"value": "@item().sourceTableName",
+											"type": "Expression"
+										}
+									}
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "script_update_watermark",
+							"type": "Script",
+							"dependsOn": [
+								{
+									"activity": "copy_incremental_load_tables_to_dl",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "ls_kv_azsql",
+								"type": "LinkedServiceReference",
+								"parameters": {
+									"username": {
+										"value": "@pipeline().parameters.azsqlUsername",
+										"type": "Expression"
+									}
+								}
+							},
+							"typeProperties": {
+								"scripts": [
+									{
+										"type": "Query",
+										"text": {
+											"value": "update @{pipeline().parameters.azsqlSchema}.@{pipeline().parameters.azsqlWatermarktbl} \n    set watermarkDateTime = activity('lkp_fetch_max_modifiedDate').output.value[0].max_modifiedDateTime where tablename = @{concat('''',item().sourceTableName,'''')}",
+											"type": "Expression"
+										}
+									}
+								],
+								"scriptBlockExecutionTimeout": "02:00:00"
+							}
 						}
 					]
 				}
@@ -98,6 +236,15 @@
 				"type": "array"
 			},
 			"bronzeContainer": {
+				"type": "string"
+			},
+			"azsqlSchema": {
+				"type": "string"
+			},
+			"azsqlWatermarktbl": {
+				"type": "string"
+			},
+			"azsqlUsername": {
 				"type": "string"
 			}
 		},

@@ -149,6 +149,18 @@
 						"bronzeContainer": {
 							"value": "@pipeline().parameters.bronzeContainer",
 							"type": "Expression"
+						},
+						"azsqlSchema": {
+							"value": "@pipeline().parameters.azsqlSchema",
+							"type": "Expression"
+						},
+						"azsqlWatermarktbl": {
+							"value": "@pipeline().parameters.azsqlWatermarkTbl",
+							"type": "Expression"
+						},
+						"azsqlUsername": {
+							"value": "@pipeline().parameters.azsqlUsername",
+							"type": "Expression"
 						}
 					}
 				}
@@ -165,6 +177,9 @@
 				"type": "string"
 			},
 			"bronzeContainer": {
+				"type": "string"
+			},
+			"azsqlWatermarkTbl": {
 				"type": "string"
 			}
 		},
