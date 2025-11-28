@@ -154,6 +154,10 @@
 							"container": {
 								"value": "@pipeline().parameters.hydrationContainer",
 								"type": "Expression"
+							},
+							"fileName": {
+								"value": "@pipeline().parameters.hydrationFileName",
+								"type": "Expression"
 							}
 						}
 					}
