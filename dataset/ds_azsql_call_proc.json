@@ -5,11 +5,6 @@
 			"referenceName": "ls_azsql_non_param",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"username": {
-				"type": "string"
-			}
-		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": []

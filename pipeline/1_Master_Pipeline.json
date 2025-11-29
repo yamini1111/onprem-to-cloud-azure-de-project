@@ -5,11 +5,9 @@
 			{
 				"name": "execute_2_copy_hydration_file",
 				"type": "ExecutePipeline",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
-						"activity": "lkp_starting_logs",
+						"activity": "lkp_conf_json",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -56,7 +54,14 @@
 			{
 				"name": "lkp_conf_json",
 				"type": "Lookup",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "lkp_starting_logs",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -142,9 +147,69 @@
 			{
 				"name": "lkp_starting_logs",
 				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[schclouddev].[uspADFLogsStartingHierarchy]",
+						"storedProcedureParameters": {
+							"p_ADFName": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().DataFactory",
+									"type": "Expression"
+								}
+							},
+							"p_parentid": {
+								"type": "Int32",
+								"value": null
+							},
+							"p_PipelineName": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().Pipeline",
+									"type": "Expression"
+								}
+							},
+							"p_RunID": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().RunId",
+									"type": "Expression"
+								}
+							},
+							"p_StartTime": {
+								"type": "DateTime",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							}
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_azsql_call_proc",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "stor_proc_call_end_logs_success",
+				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "lkp_conf_json",
+						"activity": "execute_3_data_load_from_onpremise",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -159,22 +224,95 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "AzureSqlSource",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"dataset": {
-						"referenceName": "ds_azsql_call_proc",
-						"type": "DatasetReference",
-						"parameters": {
-							"username": {
-								"value": "@activity('lkp_conf_json').output.value[0].azsqlUsername",
+					"storedProcedureName": "[schclouddev].[uspADFLogsEndingHierarchy]",
+					"storedProcedureParameters": {
+						"p_EndTime": {
+							"value": {
+								"value": "@utcNow()",
 								"type": "Expression"
-							}
+							},
+							"type": "DateTime"
+						},
+						"p_ErrorMessage": {
+							"value": null,
+							"type": "String"
+						},
+						"p_parentid": {
+							"value": {
+								"value": "@activity('lkp_starting_logs').output.value[0].p_RunID",
+								"type": "Expression"
+							},
+							"type": "Int32"
+						},
+						"p_status": {
+							"value": {
+								"value": "@variables('statusSuccess')",
+								"type": "Expression"
+							},
+							"type": "String"
 						}
-					},
-					"firstRowOnly": false
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_azsql_non_param",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "stor_proc_call_end_logs_failed",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "execute_3_data_load_from_onpremise",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[schclouddev].[uspADFLogsEndingHierarchy]",
+					"storedProcedureParameters": {
+						"p_EndTime": {
+							"value": {
+								"value": "@utcNow()",
+								"type": "Expression"
+							},
+							"type": "DateTime"
+						},
+						"p_ErrorMessage": {
+							"value": {
+								"value": "@activity('execute_3_data_load_from_onpremise').output.pipelineReturnValue.error",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"p_parentid": {
+							"value": {
+								"value": "@activity('lkp_starting_logs').output.value[0].p_RunID",
+								"type": "Expression"
+							},
+							"type": "Int32"
+						},
+						"p_status": {
+							"value": {
+								"value": "@variables('statusFail')",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_azsql_non_param",
+					"type": "LinkedServiceReference"
 				}
 			}
 		],
