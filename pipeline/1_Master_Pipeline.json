@@ -161,10 +161,6 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderStoredProcedureName": {
-							"value": "@{concat(activity('lkp_conf_json').output.value[0].azsqlschema,'.',activity('lkp_conf_json').output.value[0].azsqlStartLogsProc)}",
-							"type": "Expression"
-						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
