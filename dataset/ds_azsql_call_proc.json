@@ -2,14 +2,8 @@
 	"name": "ds_azsql_call_proc",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "ls_kv_azsql",
-			"type": "LinkedServiceReference",
-			"parameters": {
-				"username": {
-					"value": "@dataset().username",
-					"type": "Expression"
-				}
-			}
+			"referenceName": "ls_azsql_non_param",
+			"type": "LinkedServiceReference"
 		},
 		"parameters": {
 			"username": {
