@@ -291,6 +291,12 @@
 						"dependencyConditions": [
 							"Failed"
 						]
+					},
+					{
+						"activity": "execute_2_copy_hydration_file",
+						"dependencyConditions": [
+							"Failed"
+						]
 					}
 				],
 				"policy": {
