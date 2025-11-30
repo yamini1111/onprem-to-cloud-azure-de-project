@@ -414,6 +414,9 @@
 		"variables": {
 			"folderPath": {
 				"type": "String"
+			},
+			"errorMessage": {
+				"type": "String"
 			}
 		},
 		"annotations": []
