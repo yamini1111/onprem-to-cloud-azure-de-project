@@ -181,6 +181,15 @@
 			},
 			"azsqlWatermarkTbl": {
 				"type": "string"
+			},
+			"statusSuccess": {
+				"type": "string"
+			},
+			"statusFail": {
+				"type": "string"
+			},
+			"parentID": {
+				"type": "string"
 			}
 		},
 		"annotations": []

@@ -55,6 +55,10 @@
 						"statusFail": {
 							"value": "@variables('statusFail')",
 							"type": "Expression"
+						},
+						"parentID": {
+							"value": "@activity('lkp_starting_logs').output.value[0].ID",
+							"type": "Expression"
 						}
 					}
 				}
@@ -147,6 +151,18 @@
 						},
 						"azsqlWatermarkTbl": {
 							"value": "@activity('lkp_conf_json').output.value[0].azsqlWatermarkTable",
+							"type": "Expression"
+						},
+						"statusSuccess": {
+							"value": "@variables('statusSuccess')",
+							"type": "Expression"
+						},
+						"statusFail": {
+							"value": "@variables('statusFail')",
+							"type": "Expression"
+						},
+						"parentID": {
+							"value": "@activity('lkp_starting_logs').output.value[0].ID",
 							"type": "Expression"
 						}
 					}
