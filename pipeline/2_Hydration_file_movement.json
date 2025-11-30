@@ -354,7 +354,10 @@
 							"type": "DateTime"
 						},
 						"p_ErrorMessage": {
-							"value": null,
+							"value": {
+								"value": "@activity('copy_hydration_file_from_dl_to_table').output.errors.Message",
+								"type": "Expression"
+							},
 							"type": "String"
 						},
 						"p_parentid": {
