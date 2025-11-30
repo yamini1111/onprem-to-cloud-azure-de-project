@@ -5,8 +5,6 @@
 			{
 				"name": "execute_2_copy_hydration_file",
 				"type": "ExecutePipeline",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "lkp_conf_json",
@@ -48,6 +46,14 @@
 						},
 						"azsqlUsername": {
 							"value": "@activity('lkp_conf_json').output.value[0].azsqlUsername",
+							"type": "Expression"
+						},
+						"statusSuccess": {
+							"value": "@variables('statusSuccess')",
+							"type": "Expression"
+						},
+						"statusFail": {
+							"value": "@variables('statusFail')",
 							"type": "Expression"
 						}
 					}
@@ -104,8 +110,6 @@
 			{
 				"name": "execute_3_data_load_from_onpremise",
 				"type": "ExecutePipeline",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "execute_2_copy_hydration_file",

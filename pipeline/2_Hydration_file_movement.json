@@ -219,6 +219,12 @@
 			},
 			"azsqlUsername": {
 				"type": "string"
+			},
+			"statusSuccess": {
+				"type": "string"
+			},
+			"statusFail": {
+				"type": "string"
 			}
 		},
 		"variables": {
