@@ -312,10 +312,7 @@
 							"type": "DateTime"
 						},
 						"p_ErrorMessage": {
-							"value": {
-								"value": "@activity('execute_3_data_load_from_onpremise').output.pipelineReturnValue.error",
-								"type": "Expression"
-							},
+							"value": null,
 							"type": "String"
 						},
 						"p_parentid": {
