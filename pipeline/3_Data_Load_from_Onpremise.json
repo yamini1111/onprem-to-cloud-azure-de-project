@@ -125,7 +125,7 @@
 							"type": "Expression"
 						},
 						"parentID": {
-							"value": "@pipeline().parameters.parentID",
+							"value": "@activity('lkp_starting_logs').output.value[0].ID",
 							"type": "Expression"
 						},
 						"statusSuccess": {
@@ -190,7 +190,7 @@
 							"type": "Expression"
 						},
 						"parentID": {
-							"value": "@pipeline().parameters.parentID",
+							"value": "@activity('lkp_starting_logs').output.value[0].ID",
 							"type": "Expression"
 						}
 					}
