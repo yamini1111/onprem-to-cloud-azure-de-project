@@ -5,6 +5,8 @@
 			{
 				"name": "execute_2_copy_hydration_file",
 				"type": "ExecutePipeline",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "lkp_conf_json",
@@ -340,7 +342,7 @@
 				}
 			},
 			{
-				"name": "stor_proc_call_end_logs_failed_dl_load",
+				"name": "stor_proc_call_end_logs_failed_tbl",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
@@ -370,7 +372,7 @@
 						},
 						"p_ErrorMessage": {
 							"value": {
-								"value": "@concat('Pipeline ',activity('execute_3_data_load_from_onpremise').output.pipelineName,'has been failed. Refer the pipline run id: ',activity('execute_3_data_load_from_onpremise').output.pipelineRunId )",
+								"value": "@concat('Pipeline ',activity('execute_3_data_load_from_onpremise').output.pipelineName,'has been failed. Refer the pipline run id: ',activity('execute_3_data_load_from_onpremise').output.pipelineRunId)",
 								"type": "Expression"
 							},
 							"type": "String"
