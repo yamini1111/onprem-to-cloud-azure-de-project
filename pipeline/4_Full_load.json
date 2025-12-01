@@ -183,10 +183,7 @@
 							"type": "DateTime"
 						},
 						"p_ErrorMessage": {
-							"value": {
-								"value": "@activity('copy_full_load_tables_to_dl').output.errors[0].Message",
-								"type": "Expression"
-							},
+							"value": null,
 							"type": "String"
 						},
 						"p_parentid": {
