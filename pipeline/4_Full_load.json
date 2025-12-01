@@ -123,7 +123,7 @@
 							"typeProperties": {
 								"variableName": "errorMessage",
 								"value": {
-									"value": "@if(\n    empty(activity('copy_full_load_tables_to_dl').output.errors),\n    variables('tempMessage'), \n    union(variables('tempMessage'),activity('copy_full_load_tables_to_dl').output.errors[0].Message)\n)",
+									"value": "@if(\n    empty(activity('copy_full_load_tables_to_dl').output.errors),\n    variables('tempMessage'), \n    union(variables('tempMessage'),[activity('copy_full_load_tables_to_dl').output.errors[0].Message])\n)",
 									"type": "Expression"
 								}
 							}
