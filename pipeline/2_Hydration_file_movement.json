@@ -322,14 +322,14 @@
 					"storedProcedureParameters": {
 						"p_CopyActivityEndTime": {
 							"value": {
-								"value": "@activity('copy_hydration_file_from_dl_to_table').output.ExecutionEndTime",
+								"value": "@activity('copy_hydration_file_from_dl_to_table').ExecutionEndTime",
 								"type": "Expression"
 							},
 							"type": "DateTime"
 						},
 						"p_CopyActivityStartTime": {
 							"value": {
-								"value": "@activity('copy_hydration_file_from_dl_to_table').output.ExecutionStartTime",
+								"value": "@activity('copy_hydration_file_from_dl_to_table').ExecutionStartTime",
 								"type": "Expression"
 							},
 							"type": "DateTime"
@@ -447,14 +447,14 @@
 					"storedProcedureParameters": {
 						"p_CopyActivityEndTime": {
 							"value": {
-								"value": "@activity('copy_hydration_file_from_dl_to_table').output.ExecutionEndTime",
+								"value": "@activity('copy_hydration_file_from_dl_to_table').ExecutionEndTime",
 								"type": "Expression"
 							},
 							"type": "DateTime"
 						},
 						"p_CopyActivityStartTime": {
 							"value": {
-								"value": "@activity('copy_hydration_file_from_dl_to_table').output.ExecutionStartTime",
+								"value": "@activity('copy_hydration_file_from_dl_to_table').ExecutionStartTime",
 								"type": "Expression"
 							},
 							"type": "DateTime"
@@ -578,14 +578,14 @@
 					"storedProcedureParameters": {
 						"p_CopyActivityEndTime": {
 							"value": {
-								"value": "@activity('copy_hydration_file_from_sharepoint_to_dl').output.ExecutionEndTime",
+								"value": "@activity('copy_hydration_file_from_sharepoint_to_dl').ExecutionEndTime",
 								"type": "Expression"
 							},
 							"type": "DateTime"
 						},
 						"p_CopyActivityStartTime": {
 							"value": {
-								"value": "@activity('copy_hydration_file_from_sharepoint_to_dl').output.ExecutionStartTime",
+								"value": "@activity('copy_hydration_file_from_sharepoint_to_dl').ExecutionStartTime",
 								"type": "Expression"
 							},
 							"type": "DateTime"
