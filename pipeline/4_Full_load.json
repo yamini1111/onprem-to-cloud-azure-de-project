@@ -122,7 +122,7 @@
 							"typeProperties": {
 								"variableName": "errorMessage",
 								"value": {
-									"value": "@concat(variables('tempMessage'),'\\n',activity('copy_full_load_tables_to_dl').output.errors[0].Message)",
+									"value": "@if(\n    empty(activity('copy_full_load_tables_to_dl').output.errors),\n    concat(variables('tempMessage'),''),\n    concat(variables('tempMessage'),'\\n',activity('copy_full_load_tables_to_dl').output.errors[0].Message)\n)",
 									"type": "Expression"
 								}
 							}
