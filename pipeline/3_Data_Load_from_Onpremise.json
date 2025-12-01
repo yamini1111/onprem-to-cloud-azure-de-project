@@ -220,7 +220,7 @@
 									"type": "Expression"
 								}
 							},
-							"p_parentid": {
+							"p_ParentID": {
 								"type": "Int32",
 								"value": {
 									"value": "@pipeline().parameters.parentID",
@@ -247,6 +247,34 @@
 									"value": "@utcNow()",
 									"type": "Expression"
 								}
+							},
+							"p_TriggerId": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().TriggerId",
+									"type": "Expression"
+								}
+							},
+							"p_TriggerName": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().TriggerName",
+									"type": "Expression"
+								}
+							},
+							"p_TriggerTime": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().TriggerTime",
+									"type": "Expression"
+								}
+							},
+							"p_TriggerType": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().TriggerType",
+									"type": "Expression"
+								}
 							}
 						},
 						"queryTimeout": "02:00:00",
@@ -264,13 +292,13 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "execute_5_incremantal_load",
+						"activity": "execute_4_full_load",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					},
 					{
-						"activity": "execute_4_full_load",
+						"activity": "execute_5_incremantal_load",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -287,6 +315,26 @@
 				"typeProperties": {
 					"storedProcedureName": "[schclouddev].[uspADFLogsEndingHierarchy]",
 					"storedProcedureParameters": {
+						"p_CopyActivityEndTime": {
+							"value": null,
+							"type": "DateTime"
+						},
+						"p_CopyActivityStartTime": {
+							"value": null,
+							"type": "DateTime"
+						},
+						"p_CopyDurationInSecs": {
+							"value": null,
+							"type": "String"
+						},
+						"p_Destination": {
+							"value": null,
+							"type": "String"
+						},
+						"p_EffectiveIntegrationRunTime": {
+							"value": null,
+							"type": "String"
+						},
 						"p_EndTime": {
 							"value": {
 								"value": "@utcNow()",
@@ -298,14 +346,35 @@
 							"value": null,
 							"type": "String"
 						},
-						"p_parentid": {
-							"value": {
-								"value": "@activity('lkp_starting_logs').output.value[0].ID",
-								"type": "Expression"
-							},
+						"p_NoOfParallelCopies": {
+							"value": null,
 							"type": "Int32"
 						},
-						"p_status": {
+						"p_ParentID": {
+							"value": "@activity('lkp_starting_logs').output.value[0].ID",
+							"type": "Int32"
+						},
+						"p_RowsCopied": {
+							"value": null,
+							"type": "String"
+						},
+						"p_RowsRead": {
+							"value": null,
+							"type": "Int32"
+						},
+						"p_SinkType": {
+							"value": null,
+							"type": "String"
+						},
+						"p_Source": {
+							"value": null,
+							"type": "String"
+						},
+						"p_SourceType": {
+							"value": null,
+							"type": "String"
+						},
+						"p_Status": {
 							"value": {
 								"value": "@pipeline().parameters.statusSuccess",
 								"type": "Expression"
@@ -320,7 +389,7 @@
 				}
 			},
 			{
-				"name": "stor_proc_call_end_logs_failed_full",
+				"name": "stor_proc_call_end_logs_failed_full_load",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
@@ -341,6 +410,26 @@
 				"typeProperties": {
 					"storedProcedureName": "[schclouddev].[uspADFLogsEndingHierarchy]",
 					"storedProcedureParameters": {
+						"p_CopyActivityEndTime": {
+							"value": null,
+							"type": "DateTime"
+						},
+						"p_CopyActivityStartTime": {
+							"value": null,
+							"type": "DateTime"
+						},
+						"p_CopyDurationInSecs": {
+							"value": null,
+							"type": "String"
+						},
+						"p_Destination": {
+							"value": null,
+							"type": "String"
+						},
+						"p_EffectiveIntegrationRunTime": {
+							"value": null,
+							"type": "String"
+						},
 						"p_EndTime": {
 							"value": {
 								"value": "@utcNow()",
@@ -350,19 +439,40 @@
 						},
 						"p_ErrorMessage": {
 							"value": {
-								"value": "@concat('Pipeline ',activity('execute_4_full_load').output.pipelineName,'has been failed. Refer the pipline run id: ',activity('execute_4_full_load').output.pipelineRunId )",
+								"value": "@concat('Pipeline ',activity('execute_4_full_load').output.pipelineName,'has been failed. Refer the pipline run id: ',activity('execute_4_full_load').output.pipelineRunId)",
 								"type": "Expression"
 							},
 							"type": "String"
 						},
-						"p_parentid": {
-							"value": {
-								"value": "@activity('lkp_starting_logs').output.value[0].ID",
-								"type": "Expression"
-							},
+						"p_NoOfParallelCopies": {
+							"value": null,
 							"type": "Int32"
 						},
-						"p_status": {
+						"p_ParentID": {
+							"value": "@activity('lkp_starting_logs').output.value[0].ID",
+							"type": "Int32"
+						},
+						"p_RowsCopied": {
+							"value": null,
+							"type": "String"
+						},
+						"p_RowsRead": {
+							"value": null,
+							"type": "Int32"
+						},
+						"p_SinkType": {
+							"value": null,
+							"type": "String"
+						},
+						"p_Source": {
+							"value": null,
+							"type": "String"
+						},
+						"p_SourceType": {
+							"value": null,
+							"type": "String"
+						},
+						"p_Status": {
 							"value": {
 								"value": "@pipeline().parameters.statusFail",
 								"type": "Expression"
@@ -377,7 +487,7 @@
 				}
 			},
 			{
-				"name": "stor_proc_call_end_logs_failed_increment",
+				"name": "stor_proc_call_end_logs_failed_incremental_load",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
@@ -398,6 +508,26 @@
 				"typeProperties": {
 					"storedProcedureName": "[schclouddev].[uspADFLogsEndingHierarchy]",
 					"storedProcedureParameters": {
+						"p_CopyActivityEndTime": {
+							"value": null,
+							"type": "DateTime"
+						},
+						"p_CopyActivityStartTime": {
+							"value": null,
+							"type": "DateTime"
+						},
+						"p_CopyDurationInSecs": {
+							"value": null,
+							"type": "String"
+						},
+						"p_Destination": {
+							"value": null,
+							"type": "String"
+						},
+						"p_EffectiveIntegrationRunTime": {
+							"value": null,
+							"type": "String"
+						},
 						"p_EndTime": {
 							"value": {
 								"value": "@utcNow()",
@@ -407,19 +537,40 @@
 						},
 						"p_ErrorMessage": {
 							"value": {
-								"value": "@concat('Pipeline ',activity('execute_5_incremantal_load').output.pipelineName,'has been failed. Refer the pipline run id: ',activity('execute_5_incremantal_load').output.pipelineRunId )",
+								"value": "@concat('Pipeline ',activity('execute_5_incremantal_load').output.pipelineName,'has been failed. Refer the pipline run id: ',activity('execute_5_incremantal_load').output.pipelineRunId)",
 								"type": "Expression"
 							},
 							"type": "String"
 						},
-						"p_parentid": {
-							"value": {
-								"value": "@activity('lkp_starting_logs').output.value[0].ID",
-								"type": "Expression"
-							},
+						"p_NoOfParallelCopies": {
+							"value": null,
 							"type": "Int32"
 						},
-						"p_status": {
+						"p_ParentID": {
+							"value": "@activity('lkp_starting_logs').output.value[0].ID",
+							"type": "Int32"
+						},
+						"p_RowsCopied": {
+							"value": null,
+							"type": "String"
+						},
+						"p_RowsRead": {
+							"value": null,
+							"type": "Int32"
+						},
+						"p_SinkType": {
+							"value": null,
+							"type": "String"
+						},
+						"p_Source": {
+							"value": null,
+							"type": "String"
+						},
+						"p_SourceType": {
+							"value": null,
+							"type": "String"
+						},
+						"p_Status": {
 							"value": {
 								"value": "@pipeline().parameters.statusFail",
 								"type": "Expression"
