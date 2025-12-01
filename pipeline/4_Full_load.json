@@ -23,7 +23,14 @@
 						{
 							"name": "copy_full_load_tables_to_dl",
 							"type": "Copy",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "set_temp_message",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"policy": {
 								"timeout": "0.12:00:00",
 								"retry": 0,
@@ -95,6 +102,47 @@
 									}
 								}
 							]
+						},
+						{
+							"name": "set_error_message",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "copy_full_load_tables_to_dl",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "errorMessage",
+								"value": {
+									"value": "@concat(variables('tempMessage'),'\\n',activity('copy_full_load_tables_to_dl').output.errors[0].Message)",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "set_temp_message",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "tempMessage",
+								"value": {
+									"value": "@variables('errorMessage')",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
@@ -183,7 +231,10 @@
 							"type": "DateTime"
 						},
 						"p_ErrorMessage": {
-							"value": null,
+							"value": {
+								"value": "@variables('errorMessage')",
+								"type": "Expression"
+							},
 							"type": "String"
 						},
 						"p_parentid": {
@@ -286,6 +337,14 @@
 			},
 			"statusFail": {
 				"type": "string"
+			}
+		},
+		"variables": {
+			"errorMessage": {
+				"type": "String"
+			},
+			"tempMessage": {
+				"type": "String"
 			}
 		},
 		"annotations": []
