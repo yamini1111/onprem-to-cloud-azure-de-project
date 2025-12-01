@@ -116,7 +116,14 @@
 						{
 							"name": "lkp_fetch_watermark",
 							"type": "Lookup",
-							"dependsOn": [],
+							"dependsOn": [
+								{
+									"activity": "set_temp_message",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
 							"policy": {
 								"timeout": "0.12:00:00",
 								"retry": 0,
@@ -235,6 +242,47 @@
 									}
 								],
 								"scriptBlockExecutionTimeout": "02:00:00"
+							}
+						},
+						{
+							"name": "set_temp_message",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "tempMessage",
+								"value": {
+									"value": "@variables('errorMessage')",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "set_error_message",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "copy_incremental_load_tables_to_dl",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "errorMessage",
+								"value": {
+									"value": "@if(\n    empty(activity('copy_incremental_load_tables_to_dl').output.errors),\n    concat(variables('tempMessage'),''),\n    concat(variables('tempMessage'),'\\n',activity('copy_incremental_load_tables_to_dl').output.errors[0].Message)\n)",
+									"type": "Expression"
+								}
 							}
 						}
 					]
@@ -387,7 +435,10 @@
 							"type": "DateTime"
 						},
 						"p_ErrorMessage": {
-							"value": null,
+							"value": {
+								"value": "@variables('errorMessage')",
+								"type": "Expression"
+							},
 							"type": "String"
 						},
 						"p_parentid": {
@@ -436,6 +487,14 @@
 			},
 			"parentID": {
 				"type": "string"
+			}
+		},
+		"variables": {
+			"errorMessage": {
+				"type": "String"
+			},
+			"tempMessage": {
+				"type": "String"
 			}
 		},
 		"annotations": []
