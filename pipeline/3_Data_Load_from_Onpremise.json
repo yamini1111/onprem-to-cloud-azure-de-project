@@ -407,7 +407,7 @@
 						},
 						"p_ErrorMessage": {
 							"value": {
-								"value": "@concat('Pipeline ',activity('execute_4_full_load').output.pipelineName,'has been failed. Refer the pipline run id: ',activity('execute_4_full_load').output.pipelineRunId )",
+								"value": "@concat('Pipeline ',activity('execute_5_incremantal_load').output.pipelineName,'has been failed. Refer the pipline run id: ',activity('execute_5_incremantal_load').output.pipelineRunId )",
 								"type": "Expression"
 							},
 							"type": "String"
