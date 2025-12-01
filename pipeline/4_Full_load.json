@@ -259,7 +259,7 @@
 									},
 									"p_status": {
 										"value": {
-											"value": "@pipeline().parameters.statusFail",
+											"value": "@pipeline().parameters.statusSuccess",
 											"type": "Expression"
 										},
 										"type": "String"
