@@ -283,7 +283,7 @@
 				}
 			},
 			{
-				"name": "stor_proc_call_end_logs_failed",
+				"name": "stor_proc_call_end_logs_failed_hyd_copy",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
@@ -312,7 +312,10 @@
 							"type": "DateTime"
 						},
 						"p_ErrorMessage": {
-							"value": null,
+							"value": {
+								"value": "@concat(activity('execute_2_copy_hydration_file').output.pipelineName,'has been failed. Refer the pipline run id: ',activity('execute_2_copy_hydration_file').output.pipelineRunId )",
+								"type": "Expression"
+							},
 							"type": "String"
 						},
 						"p_parentid": {
