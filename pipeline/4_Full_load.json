@@ -122,7 +122,7 @@
 							"typeProperties": {
 								"variableName": "errorMessage",
 								"value": {
-									"value": "@if(\n    empty(activity('copy_full_load_tables_to_dl').output.errors),\n    concat(variables('tempMessage'),''),\n    concat(variables('tempMessage'),'\\n',activity('copy_full_load_tables_to_dl').output.errors[0].Message)\n)",
+									"value": "@if(\n    empty(activity('copy_full_load_tables_to_dl').output.errors),\n    '', \n    union(variables('tempMessage'),activity('copy_full_load_tables_to_dl').output.errors[0].Message)\n)",
 									"type": "Expression"
 								}
 							}
@@ -341,10 +341,10 @@
 		},
 		"variables": {
 			"errorMessage": {
-				"type": "String"
+				"type": "Array"
 			},
 			"tempMessage": {
-				"type": "String"
+				"type": "Array"
 			}
 		},
 		"annotations": []
