@@ -19,6 +19,7 @@
 						"value": "@pipeline().parameters.fullLoadTables",
 						"type": "Expression"
 					},
+					"isSequential": true,
 					"activities": [
 						{
 							"name": "copy_full_load_tables_to_dl",
@@ -110,7 +111,7 @@
 								{
 									"activity": "copy_full_load_tables_to_dl",
 									"dependencyConditions": [
-										"Succeeded"
+										"Failed"
 									]
 								}
 							],
@@ -122,7 +123,7 @@
 							"typeProperties": {
 								"variableName": "errorMessage",
 								"value": {
-									"value": "@if(\n    empty(activity('copy_full_load_tables_to_dl').output.errors),\n    '', \n    union(variables('tempMessage'),activity('copy_full_load_tables_to_dl').output.errors[0].Message)\n)",
+									"value": "@if(\n    empty(activity('copy_full_load_tables_to_dl').output.errors),\n    variables('tempMessage'), \n    union(variables('tempMessage'),activity('copy_full_load_tables_to_dl').output.errors[0].Message)\n)",
 									"type": "Expression"
 								}
 							}
@@ -232,7 +233,7 @@
 						},
 						"p_ErrorMessage": {
 							"value": {
-								"value": "@variables('errorMessage')",
+								"value": "@string(variables('errorMessage'))",
 								"type": "Expression"
 							},
 							"type": "String"
