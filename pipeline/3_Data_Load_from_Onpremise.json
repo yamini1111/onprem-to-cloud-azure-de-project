@@ -320,17 +320,11 @@
 				}
 			},
 			{
-				"name": "stor_proc_call_end_logs_failed",
+				"name": "stor_proc_call_end_logs_failed_full",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
 						"activity": "execute_4_full_load",
-						"dependencyConditions": [
-							"Failed"
-						]
-					},
-					{
-						"activity": "execute_5_incremantal_load",
 						"dependencyConditions": [
 							"Failed"
 						]
