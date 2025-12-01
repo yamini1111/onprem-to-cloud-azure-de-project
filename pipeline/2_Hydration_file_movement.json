@@ -355,7 +355,7 @@
 						},
 						"p_ErrorMessage": {
 							"value": {
-								"value": "@if(empty(variables('errorMessage')), activity('copy_hydration_file_from_dl_to_table').output.errors.Message, concat(variables('errorMessage'),'\\n',activity('copy_hydration_file_from_dl_to_table').output.errors[0].Message))",
+								"value": "@if(empty(variables('errorMessage')), activity('copy_hydration_file_from_dl_to_table').output.errors[0].Message, concat(variables('errorMessage'),'\\n',activity('copy_hydration_file_from_dl_to_table').output.errors[0].Message))",
 								"type": "Expression"
 							},
 							"type": "String"
