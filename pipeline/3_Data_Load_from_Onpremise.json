@@ -123,6 +123,18 @@
 						"bronzeContainer": {
 							"value": "@pipeline().parameters.bronzeContainer",
 							"type": "Expression"
+						},
+						"parentID": {
+							"value": "@pipeline().parameters.parentID",
+							"type": "Expression"
+						},
+						"statusSuccess": {
+							"value": "@pipeline().parameters.statusSuccess",
+							"type": "Expression"
+						},
+						"statusFail": {
+							"value": "@pipeline().parameters.statusFail",
+							"type": "Expression"
 						}
 					}
 				}
@@ -167,6 +179,18 @@
 						},
 						"azsqlUsername": {
 							"value": "@pipeline().parameters.azsqlUsername",
+							"type": "Expression"
+						},
+						"statusSuccess": {
+							"value": "@pipeline().parameters.statusSuccess",
+							"type": "Expression"
+						},
+						"statusFail": {
+							"value": "@pipeline().parameters.statusFail",
+							"type": "Expression"
+						},
+						"parentID": {
+							"value": "@pipeline().parameters.parentID",
 							"type": "Expression"
 						}
 					}
