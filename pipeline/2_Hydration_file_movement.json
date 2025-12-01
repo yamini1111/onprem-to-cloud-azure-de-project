@@ -325,7 +325,7 @@
 				}
 			},
 			{
-				"name": "stor_proc_call_end_logs_failed_table",
+				"name": "stor_proc_call_end_logs_failed",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
@@ -355,7 +355,7 @@
 						},
 						"p_ErrorMessage": {
 							"value": {
-								"value": "@if(empty(variables('errorMessage')), activity('copy_hydration_file_from_dl_to_table').output.errors[0].Message, concat(variables('errorMessage'),'\\n',activity('copy_hydration_file_from_dl_to_table').output.errors[0].Message))",
+								"value": "@if(\n    or(\n        not(empty(activity('copy_hydration_file_from_sharepoint_to_dl').output.errors)),\n        not(empty(activity('copy_hydration_file_from_dl_to_table').output.errors))\n    ),\n    concat(activity('copy_hydration_file_from_dl_to_table').output.errors[0].Message, '\\n',activity('copy_hydration_file_from_dl_to_table').output.errors[0].Message),\n    ''\n)",
 								"type": "Expression"
 							},
 							"type": "String"
@@ -379,30 +379,6 @@
 				"linkedServiceName": {
 					"referenceName": "ls_azsql_non_param",
 					"type": "LinkedServiceReference"
-				}
-			},
-			{
-				"name": "set_error_message_agg",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "copy_hydration_file_from_sharepoint_to_dl",
-						"dependencyConditions": [
-							"Failed"
-						]
-					}
-				],
-				"policy": {
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "errorMessage",
-					"value": {
-						"value": "@activity('copy_hydration_file_from_sharepoint_to_dl').output.errors[0].Message",
-						"type": "Expression"
-					}
 				}
 			}
 		],
@@ -437,9 +413,6 @@
 		},
 		"variables": {
 			"folderPath": {
-				"type": "String"
-			},
-			"errorMessage": {
 				"type": "String"
 			}
 		},
