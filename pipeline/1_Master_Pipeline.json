@@ -747,7 +747,8 @@
 					"dataset": {
 						"referenceName": "ds_azsql_call_proc",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			},
 			{
@@ -854,7 +855,8 @@
 					"dataset": {
 						"referenceName": "ds_azsql_call_proc",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			},
 			{
@@ -961,7 +963,8 @@
 					"dataset": {
 						"referenceName": "ds_azsql_call_proc",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			},
 			{
