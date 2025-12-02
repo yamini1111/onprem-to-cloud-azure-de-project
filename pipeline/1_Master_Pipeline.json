@@ -414,10 +414,7 @@
 							"type": "DateTime"
 						},
 						"p_ErrorMessage": {
-							"value": {
-								"value": "@concat('Pipeline ',activity('execute_2_copy_hydration_file').output.pipelineName,' has been failed. Refer the pipline run id: ',activity('execute_2_copy_hydration_file').output.pipelineRunId)",
-								"type": "Expression"
-							},
+							"value": null,
 							"type": "String"
 						},
 						"p_NoOfParallelCopies": {
