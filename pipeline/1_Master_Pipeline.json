@@ -171,7 +171,14 @@
 			{
 				"name": "lkp_starting_logs",
 				"type": "Lookup",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "web_starting_mail",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -317,7 +324,10 @@
 							"type": "Int32"
 						},
 						"p_ParentID": {
-							"value": "@activity('lkp_starting_logs').output.value[0].ID",
+							"value": {
+								"value": "@activity('lkp_starting_logs').output.value[0].ID",
+								"type": "Expression"
+							},
 							"type": "Int32"
 						},
 						"p_RowsCopied": {
@@ -415,7 +425,10 @@
 							"type": "Int32"
 						},
 						"p_ParentID": {
-							"value": "@activity('lkp_starting_logs').output.value[0].ID",
+							"value": {
+								"value": "@activity('lkp_starting_logs').output.value[0].ID",
+								"type": "Expression"
+							},
 							"type": "Int32"
 						},
 						"p_RowsCopied": {
@@ -513,7 +526,10 @@
 							"type": "Int32"
 						},
 						"p_ParentID": {
-							"value": "@activity('lkp_starting_logs').output.value[0].ID",
+							"value": {
+								"value": "@activity('lkp_starting_logs').output.value[0].ID",
+								"type": "Expression"
+							},
 							"type": "Int32"
 						},
 						"p_RowsCopied": {
@@ -548,6 +564,425 @@
 				"linkedServiceName": {
 					"referenceName": "ls_azsql_non_param",
 					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "web_starting_mail",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "lkp_starting_mail",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": {
+						"value": "@variables('mailURL')",
+						"type": "Expression"
+					},
+					"body": {
+						"value": "{\n  \"to\": \"@{activity('lkp_starting_mail').output.value[0].to}\",\n  \"subject\": \"@{activity('lkp_starting_mail').output.value[0].subject}\",\n  \"body\": \"@{activity('lkp_starting_mail').output.value[0].body}\"\n}",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "lkp_starting_mail",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[schclouddev].[uspSendEmailNotification]",
+						"storedProcedureParameters": {
+							"p_ADFName": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().DataFactory",
+									"type": "Expression"
+								}
+							},
+							"p_EndTime": {
+								"type": "DateTime",
+								"value": null
+							},
+							"p_PipelineName": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().Pipeline",
+									"type": "Expression"
+								}
+							},
+							"p_RunID": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().RunId",
+									"type": "Expression"
+								}
+							},
+							"p_StartTime": {
+								"type": "DateTime",
+								"value": {
+									"value": "@pipeline().TriggerTime",
+									"type": "Expression"
+								}
+							},
+							"p_Status": {
+								"type": "String",
+								"value": {
+									"value": "@variables('statusStart')",
+									"type": "Expression"
+								}
+							}
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_azsql_call_proc",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "lkp_success_mail",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "stor_proc_call_end_logs_success",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[schclouddev].[uspSendEmailNotification]",
+						"storedProcedureParameters": {
+							"p_ADFName": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().DataFactory",
+									"type": "Expression"
+								}
+							},
+							"p_EndTime": {
+								"type": "DateTime",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							},
+							"p_PipelineName": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().Pipeline",
+									"type": "Expression"
+								}
+							},
+							"p_RunID": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().RunId",
+									"type": "Expression"
+								}
+							},
+							"p_StartTime": {
+								"type": "DateTime",
+								"value": {
+									"value": "@pipeline().TriggerTime",
+									"type": "Expression"
+								}
+							},
+							"p_Status": {
+								"type": "String",
+								"value": {
+									"value": "@variables('statusSuccess')",
+									"type": "Expression"
+								}
+							}
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_azsql_call_proc",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "web_success_mail",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "lkp_success_mail",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": {
+						"value": "@variables('mailURL')",
+						"type": "Expression"
+					},
+					"body": {
+						"value": "{\n  \"to\": \"@{activity('lkp_success_mail').output.value[0].to}\",\n  \"subject\": \"@{activity('lkp_success_mail').output.value[0].subject}\",\n  \"body\": \"@{activity('lkp_success_mail').output.value[0].body}\"\n}",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "lkp_fail_tbl_mail",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "stor_proc_call_end_logs_failed_tbl",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[schclouddev].[uspSendEmailNotification]",
+						"storedProcedureParameters": {
+							"p_ADFName": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().DataFactory",
+									"type": "Expression"
+								}
+							},
+							"p_EndTime": {
+								"type": "DateTime",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							},
+							"p_PipelineName": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().Pipeline",
+									"type": "Expression"
+								}
+							},
+							"p_RunID": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().RunId",
+									"type": "Expression"
+								}
+							},
+							"p_StartTime": {
+								"type": "DateTime",
+								"value": {
+									"value": "@pipeline().TriggerTime",
+									"type": "Expression"
+								}
+							},
+							"p_Status": {
+								"type": "String",
+								"value": {
+									"value": "@variables('statusFail')",
+									"type": "Expression"
+								}
+							}
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_azsql_call_proc",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "web_fail_tbl_mail",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "lkp_fail_tbl_mail",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": {
+						"value": "@variables('mailURL')",
+						"type": "Expression"
+					},
+					"body": {
+						"value": "{\n  \"to\": \"@{activity('lkp_fail_tbl_mail').output.value[0].to}\",\n  \"subject\": \"@{activity('lkp_fail_tbl_mail').output.value[0].subject}\",\n  \"body\": \"@{activity('lkp_fail_tbl_mail').output.value[0].body}\"\n}",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "lkp_fail_hyd_mail",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "stor_proc_call_end_logs_failed_hyd",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[schclouddev].[uspSendEmailNotification]",
+						"storedProcedureParameters": {
+							"p_ADFName": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().DataFactory",
+									"type": "Expression"
+								}
+							},
+							"p_EndTime": {
+								"type": "DateTime",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							},
+							"p_PipelineName": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().Pipeline",
+									"type": "Expression"
+								}
+							},
+							"p_RunID": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().RunId",
+									"type": "Expression"
+								}
+							},
+							"p_StartTime": {
+								"type": "DateTime",
+								"value": {
+									"value": "@pipeline().TriggerTime",
+									"type": "Expression"
+								}
+							},
+							"p_Status": {
+								"type": "String",
+								"value": {
+									"value": "@variables('statusFail')",
+									"type": "Expression"
+								}
+							}
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_azsql_call_proc",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "web_fail_hyd_mail",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "lkp_fail_hyd_mail",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": {
+						"value": "@variables('mailURL')",
+						"type": "Expression"
+					},
+					"body": {
+						"value": "{\n  \"to\": \"@{activity('lkp_fail_hyd_mail').output.value[0].to}\",\n  \"subject\": \"@{activity('lkp_fail_hyd_mail').output.value[0].subject}\",\n  \"body\": \"@{activity('lkp_fail_hyd_mail').output.value[0].body}\"\n}",
+						"type": "Expression"
+					}
 				}
 			}
 		],
@@ -586,6 +1021,14 @@
 			},
 			"EndLogsProc": {
 				"type": "String"
+			},
+			"statusStart": {
+				"type": "String",
+				"defaultValue": "Start"
+			},
+			"mailURL": {
+				"type": "String",
+				"defaultValue": "https://prod-00.northcentralus.logic.azure.com:443/workflows/79bd6ffb4b244869aa87c7dbcb7db1e6/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=oCFtEy4yMUrW8pLT0nHgy6b9RpDxhMXsdLZMRi-39pw"
 			}
 		},
 		"annotations": []
