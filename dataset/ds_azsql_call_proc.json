@@ -1,0 +1,12 @@
+{
+	"name": "ds_azsql_call_proc",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_azsql_non_param",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}

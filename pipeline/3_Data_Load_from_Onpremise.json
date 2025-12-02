@@ -1,0 +1,616 @@
+{
+	"name": "3_Data_Load_from_Onpremise",
+	"properties": {
+		"activities": [
+			{
+				"name": "lkp_fetch_table_list",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "lkp_starting_logs",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_sql_cloud_dev",
+						"type": "DatasetReference",
+						"parameters": {
+							"username": {
+								"value": "@pipeline().parameters.azsqlUsername",
+								"type": "Expression"
+							},
+							"schema": {
+								"value": "@pipeline().parameters.azsqlSchema",
+								"type": "Expression"
+							},
+							"table": {
+								"value": "@pipeline().parameters.azsqlTable",
+								"type": "Expression"
+							}
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "filter_full_load_tables",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "lkp_fetch_table_list",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('lkp_fetch_table_list').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@equals(item().LoadType, 'full')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "filter_incremental_load_tables",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "lkp_fetch_table_list",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('lkp_fetch_table_list').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@equals(item().LoadType,'inc')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "execute_4_full_load",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "filter_full_load_tables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "4_Full_load",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"fullLoadTables": {
+							"value": "@activity('filter_full_load_tables').output.value",
+							"type": "Expression"
+						},
+						"bronzeContainer": {
+							"value": "@pipeline().parameters.bronzeContainer",
+							"type": "Expression"
+						},
+						"parentID": {
+							"value": "@activity('lkp_starting_logs').output.value[0].ID",
+							"type": "Expression"
+						},
+						"statusSuccess": {
+							"value": "@pipeline().parameters.statusSuccess",
+							"type": "Expression"
+						},
+						"statusFail": {
+							"value": "@pipeline().parameters.statusFail",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "execute_5_incremantal_load",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "filter_incremental_load_tables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "5_Incremental_load",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"incLoadTables": {
+							"value": "@activity('filter_incremental_load_tables').output.value",
+							"type": "Expression"
+						},
+						"bronzeContainer": {
+							"value": "@pipeline().parameters.bronzeContainer",
+							"type": "Expression"
+						},
+						"azsqlSchema": {
+							"value": "@pipeline().parameters.azsqlSchema",
+							"type": "Expression"
+						},
+						"azsqlWatermarktbl": {
+							"value": "@pipeline().parameters.azsqlWatermarkTbl",
+							"type": "Expression"
+						},
+						"azsqlUsername": {
+							"value": "@pipeline().parameters.azsqlUsername",
+							"type": "Expression"
+						},
+						"statusSuccess": {
+							"value": "@pipeline().parameters.statusSuccess",
+							"type": "Expression"
+						},
+						"statusFail": {
+							"value": "@pipeline().parameters.statusFail",
+							"type": "Expression"
+						},
+						"parentID": {
+							"value": "@activity('lkp_starting_logs').output.value[0].ID",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "lkp_starting_logs",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[schclouddev].[uspADFLogsStartingHierarchy]",
+						"storedProcedureParameters": {
+							"p_ADFName": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().DataFactory",
+									"type": "Expression"
+								}
+							},
+							"p_ParentID": {
+								"type": "Int32",
+								"value": {
+									"value": "@pipeline().parameters.parentID",
+									"type": "Expression"
+								}
+							},
+							"p_PipelineName": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().Pipeline",
+									"type": "Expression"
+								}
+							},
+							"p_RunID": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().RunId",
+									"type": "Expression"
+								}
+							},
+							"p_StartTime": {
+								"type": "DateTime",
+								"value": {
+									"value": "@utcNow()",
+									"type": "Expression"
+								}
+							},
+							"p_TriggerId": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().TriggerId",
+									"type": "Expression"
+								}
+							},
+							"p_TriggerName": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().TriggerName",
+									"type": "Expression"
+								}
+							},
+							"p_TriggerTime": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().TriggerTime",
+									"type": "Expression"
+								}
+							},
+							"p_TriggerType": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().TriggerType",
+									"type": "Expression"
+								}
+							}
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_azsql_call_proc",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "stor_proc_call_end_logs_success",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "execute_4_full_load",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "execute_5_incremantal_load",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[schclouddev].[uspADFLogsEndingHierarchy]",
+					"storedProcedureParameters": {
+						"p_CopyActivityEndTime": {
+							"value": null,
+							"type": "DateTime"
+						},
+						"p_CopyActivityStartTime": {
+							"value": null,
+							"type": "DateTime"
+						},
+						"p_CopyDurationInSecs": {
+							"value": null,
+							"type": "String"
+						},
+						"p_Destination": {
+							"value": null,
+							"type": "String"
+						},
+						"p_EffectiveIntegrationRunTime": {
+							"value": null,
+							"type": "String"
+						},
+						"p_EndTime": {
+							"value": {
+								"value": "@utcNow()",
+								"type": "Expression"
+							},
+							"type": "DateTime"
+						},
+						"p_ErrorMessage": {
+							"value": null,
+							"type": "String"
+						},
+						"p_NoOfParallelCopies": {
+							"value": null,
+							"type": "Int32"
+						},
+						"p_ParentID": {
+							"value": "@activity('lkp_starting_logs').output.value[0].ID",
+							"type": "Int32"
+						},
+						"p_RowsCopied": {
+							"value": null,
+							"type": "String"
+						},
+						"p_RowsRead": {
+							"value": null,
+							"type": "Int32"
+						},
+						"p_SinkType": {
+							"value": null,
+							"type": "String"
+						},
+						"p_Source": {
+							"value": null,
+							"type": "String"
+						},
+						"p_SourceType": {
+							"value": null,
+							"type": "String"
+						},
+						"p_Status": {
+							"value": {
+								"value": "@pipeline().parameters.statusSuccess",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_azsql_non_param",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "stor_proc_call_end_logs_failed_full_load",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "execute_4_full_load",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[schclouddev].[uspADFLogsEndingHierarchy]",
+					"storedProcedureParameters": {
+						"p_CopyActivityEndTime": {
+							"value": null,
+							"type": "DateTime"
+						},
+						"p_CopyActivityStartTime": {
+							"value": null,
+							"type": "DateTime"
+						},
+						"p_CopyDurationInSecs": {
+							"value": null,
+							"type": "String"
+						},
+						"p_Destination": {
+							"value": null,
+							"type": "String"
+						},
+						"p_EffectiveIntegrationRunTime": {
+							"value": null,
+							"type": "String"
+						},
+						"p_EndTime": {
+							"value": {
+								"value": "@utcNow()",
+								"type": "Expression"
+							},
+							"type": "DateTime"
+						},
+						"p_ErrorMessage": {
+							"value": {
+								"value": "@concat('Pipeline ',activity('execute_4_full_load').output.pipelineName,'has been failed. Refer the pipline run id: ',activity('execute_4_full_load').output.pipelineRunId)",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"p_NoOfParallelCopies": {
+							"value": null,
+							"type": "Int32"
+						},
+						"p_ParentID": {
+							"value": "@activity('lkp_starting_logs').output.value[0].ID",
+							"type": "Int32"
+						},
+						"p_RowsCopied": {
+							"value": null,
+							"type": "String"
+						},
+						"p_RowsRead": {
+							"value": null,
+							"type": "Int32"
+						},
+						"p_SinkType": {
+							"value": null,
+							"type": "String"
+						},
+						"p_Source": {
+							"value": null,
+							"type": "String"
+						},
+						"p_SourceType": {
+							"value": null,
+							"type": "String"
+						},
+						"p_Status": {
+							"value": {
+								"value": "@pipeline().parameters.statusFail",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_azsql_non_param",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "stor_proc_call_end_logs_failed_incremental_load",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "execute_5_incremantal_load",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[schclouddev].[uspADFLogsEndingHierarchy]",
+					"storedProcedureParameters": {
+						"p_CopyActivityEndTime": {
+							"value": null,
+							"type": "DateTime"
+						},
+						"p_CopyActivityStartTime": {
+							"value": null,
+							"type": "DateTime"
+						},
+						"p_CopyDurationInSecs": {
+							"value": null,
+							"type": "String"
+						},
+						"p_Destination": {
+							"value": null,
+							"type": "String"
+						},
+						"p_EffectiveIntegrationRunTime": {
+							"value": null,
+							"type": "String"
+						},
+						"p_EndTime": {
+							"value": {
+								"value": "@utcNow()",
+								"type": "Expression"
+							},
+							"type": "DateTime"
+						},
+						"p_ErrorMessage": {
+							"value": {
+								"value": "@concat('Pipeline ',activity('execute_5_incremantal_load').output.pipelineName,'has been failed. Refer the pipline run id: ',activity('execute_5_incremantal_load').output.pipelineRunId)",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"p_NoOfParallelCopies": {
+							"value": null,
+							"type": "Int32"
+						},
+						"p_ParentID": {
+							"value": "@activity('lkp_starting_logs').output.value[0].ID",
+							"type": "Int32"
+						},
+						"p_RowsCopied": {
+							"value": null,
+							"type": "String"
+						},
+						"p_RowsRead": {
+							"value": null,
+							"type": "Int32"
+						},
+						"p_SinkType": {
+							"value": null,
+							"type": "String"
+						},
+						"p_Source": {
+							"value": null,
+							"type": "String"
+						},
+						"p_SourceType": {
+							"value": null,
+							"type": "String"
+						},
+						"p_Status": {
+							"value": {
+								"value": "@pipeline().parameters.statusFail",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_azsql_non_param",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"azsqlUsername": {
+				"type": "string"
+			},
+			"azsqlSchema": {
+				"type": "string"
+			},
+			"azsqlTable": {
+				"type": "string"
+			},
+			"bronzeContainer": {
+				"type": "string"
+			},
+			"azsqlWatermarkTbl": {
+				"type": "string"
+			},
+			"statusSuccess": {
+				"type": "string"
+			},
+			"statusFail": {
+				"type": "string"
+			},
+			"parentID": {
+				"type": "string"
+			}
+		},
+		"annotations": []
+	}
+}

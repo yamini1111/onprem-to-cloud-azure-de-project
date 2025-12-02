@@ -1,0 +1,30 @@
+{
+	"name": "ls_kv_onprem_sql",
+	"properties": {
+		"parameters": {
+			"akv_dev_conn_str": {
+				"type": "string",
+				"defaultValue": "akvs-onpremsql-conn-str"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "ls_azkv_onprem",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": {
+					"value": "@linkedService().akv_dev_conn_str",
+					"type": "Expression"
+				}
+			}
+		},
+		"connectVia": {
+			"referenceName": "SHIR-Onprem-to-cloud",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

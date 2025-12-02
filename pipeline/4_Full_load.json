@@ -1,0 +1,470 @@
+{
+	"name": "4_Full_load",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach_full_load",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.fullLoadTables",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"activities": [
+						{
+							"name": "copy_full_load_tables_to_dl",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "lkp_starting_logs",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_onprem_sql",
+									"type": "DatasetReference",
+									"parameters": {
+										"schema": {
+											"value": "@item().sourceSchema",
+											"type": "Expression"
+										},
+										"table": {
+											"value": "@item().sourceTableName",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ds_adls_csv_load_tables",
+									"type": "DatasetReference",
+									"parameters": {
+										"container": {
+											"value": "@pipeline().parameters.bronzeContainer",
+											"type": "Expression"
+										},
+										"folderPath": {
+											"value": "@concat(substring(utcNow(), 0,4),'/',\n        substring(utcNow(), 5,2 ),'/',\n        substring(utcNow(), 8,2 ))",
+											"type": "Expression"
+										},
+										"fileName": {
+											"value": "@concat(item().sourceSchema,'_',\n        item().sourceTableName,'.csv')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "lkp_starting_logs",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderStoredProcedureName": "[schclouddev].[uspADFLogsStartingHierarchy]",
+									"storedProcedureParameters": {
+										"p_ADFName": {
+											"type": "String",
+											"value": {
+												"value": "@pipeline().DataFactory",
+												"type": "Expression"
+											}
+										},
+										"p_ParentID": {
+											"type": "Int32",
+											"value": {
+												"value": "@pipeline().parameters.parentID",
+												"type": "Expression"
+											}
+										},
+										"p_PipelineName": {
+											"type": "String",
+											"value": {
+												"value": "@pipeline().Pipeline",
+												"type": "Expression"
+											}
+										},
+										"p_RunID": {
+											"type": "String",
+											"value": {
+												"value": "@pipeline().RunId",
+												"type": "Expression"
+											}
+										},
+										"p_StartTime": {
+											"type": "DateTime",
+											"value": {
+												"value": "@utcNow()",
+												"type": "Expression"
+											}
+										},
+										"p_TriggerId": {
+											"type": "String",
+											"value": {
+												"value": "@pipeline().TriggerId",
+												"type": "Expression"
+											}
+										},
+										"p_TriggerName": {
+											"type": "String",
+											"value": {
+												"value": "@pipeline().TriggerName",
+												"type": "Expression"
+											}
+										},
+										"p_TriggerTime": {
+											"type": "String",
+											"value": {
+												"value": "@pipeline().TriggerTime",
+												"type": "Expression"
+											}
+										},
+										"p_TriggerType": {
+											"type": "String",
+											"value": {
+												"value": "@pipeline().TriggerType",
+												"type": "Expression"
+											}
+										}
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "ds_azsql_call_proc",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "stor_proc_call_end_logs_success",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "copy_full_load_tables_to_dl",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[schclouddev].[uspADFLogsEndingHierarchy]",
+								"storedProcedureParameters": {
+									"p_CopyActivityEndTime": {
+										"value": {
+											"value": "@activity('copy_full_load_tables_to_dl').ExecutionEndTime",
+											"type": "Expression"
+										},
+										"type": "DateTime"
+									},
+									"p_CopyActivityStartTime": {
+										"value": {
+											"value": "@activity('copy_full_load_tables_to_dl').ExecutionStartTime",
+											"type": "Expression"
+										},
+										"type": "DateTime"
+									},
+									"p_CopyDurationInSecs": {
+										"value": {
+											"value": "@activity('copy_full_load_tables_to_dl').output.copyDuration",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_Destination": {
+										"value": {
+											"value": "@concat(pipeline().parameters.bronzeContainer,'/',substring(utcNow(), 0,4),'/',\n        substring(utcNow(), 5,2 ),'/',\n        substring(utcNow(), 8,2 ),'/',item().sourceSchema,'_',\n        item().sourceTableName,'.csv')",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_EffectiveIntegrationRunTime": {
+										"value": {
+											"value": "@activity('copy_full_load_tables_to_dl').output.effectiveIntegrationRuntime",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_EndTime": {
+										"value": {
+											"value": "@utcNow()",
+											"type": "Expression"
+										},
+										"type": "DateTime"
+									},
+									"p_ErrorMessage": {
+										"value": null,
+										"type": "String"
+									},
+									"p_NoOfParallelCopies": {
+										"value": {
+											"value": "@activity('copy_full_load_tables_to_dl').output.usedParallelCopies",
+											"type": "Expression"
+										},
+										"type": "Int32"
+									},
+									"p_ParentID": {
+										"value": "@activity('lkp_starting_logs').output.value[0].ID",
+										"type": "Int32"
+									},
+									"p_RowsCopied": {
+										"value": {
+											"value": "@activity('copy_full_load_tables_to_dl').output.rowsRead",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_RowsRead": {
+										"value": {
+											"value": "@activity('copy_full_load_tables_to_dl').output.rowsRead",
+											"type": "Expression"
+										},
+										"type": "Int32"
+									},
+									"p_SinkType": {
+										"value": {
+											"value": "@activity('copy_full_load_tables_to_dl').output.executionDetails[0].sink.type",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_Source": {
+										"value": {
+											"value": "@concat(item().sourceSchema,'.',item().sourceTableName)",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_SourceType": {
+										"value": {
+											"value": "@activity('copy_full_load_tables_to_dl').output.executionDetails[0].source.type",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_Status": {
+										"value": "@pipeline().parameters.statusSuccess",
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_azsql_non_param",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "stor_proc_call_end_logs_failed",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "copy_full_load_tables_to_dl",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[schclouddev].[uspADFLogsEndingHierarchy]",
+								"storedProcedureParameters": {
+									"p_CopyActivityEndTime": {
+										"value": {
+											"value": "@activity('copy_full_load_tables_to_dl').ExecutionEndTime",
+											"type": "Expression"
+										},
+										"type": "DateTime"
+									},
+									"p_CopyActivityStartTime": {
+										"value": {
+											"value": "@activity('copy_full_load_tables_to_dl').ExecutionStartTime",
+											"type": "Expression"
+										},
+										"type": "DateTime"
+									},
+									"p_CopyDurationInSecs": {
+										"value": {
+											"value": "@activity('copy_full_load_tables_to_dl').output.copyDuration",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_Destination": {
+										"value": {
+											"value": "@concat(pipeline().parameters.bronzeContainer,'/',substring(utcNow(), 0,4),'/',\n        substring(utcNow(), 5,2 ),'/',\n        substring(utcNow(), 8,2 ),'/',item().sourceSchema,'_',\n        item().sourceTableName,'.csv')",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_EffectiveIntegrationRunTime": {
+										"value": {
+											"value": "@activity('copy_full_load_tables_to_dl').output.effectiveIntegrationRuntime",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_EndTime": {
+										"value": {
+											"value": "@utcNow()",
+											"type": "Expression"
+										},
+										"type": "DateTime"
+									},
+									"p_ErrorMessage": {
+										"value": {
+											"value": "@activity('copy_full_load_tables_to_dl').output.errors[0].Message",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_NoOfParallelCopies": {
+										"value": {
+											"value": "@activity('copy_full_load_tables_to_dl').output.usedParallelCopies",
+											"type": "Expression"
+										},
+										"type": "Int32"
+									},
+									"p_ParentID": {
+										"value": "@activity('lkp_starting_logs').output.value[0].ID",
+										"type": "Int32"
+									},
+									"p_RowsCopied": {
+										"value": {
+											"value": "@activity('copy_full_load_tables_to_dl').output.rowsRead",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_RowsRead": {
+										"value": {
+											"value": "@activity('copy_full_load_tables_to_dl').output.rowsRead",
+											"type": "Expression"
+										},
+										"type": "Int32"
+									},
+									"p_SinkType": {
+										"value": {
+											"value": "@activity('copy_full_load_tables_to_dl').output.executionDetails[0].sink.type",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_Source": {
+										"value": {
+											"value": "@concat(item().sourceSchema,'.',item().sourceTableName)",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_SourceType": {
+										"value": {
+											"value": "@activity('copy_full_load_tables_to_dl').output.executionDetails[0].source.type",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_Status": {
+										"value": {
+											"value": "@pipeline().parameters.statusFail",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_azsql_non_param",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"fullLoadTables": {
+				"type": "array"
+			},
+			"bronzeContainer": {
+				"type": "string"
+			},
+			"parentID": {
+				"type": "string"
+			},
+			"statusSuccess": {
+				"type": "string"
+			},
+			"statusFail": {
+				"type": "string"
+			}
+		},
+		"annotations": []
+	}
+}
