@@ -4,7 +4,7 @@
 		"annotations": [],
 		"type": "AzureBlobFS",
 		"typeProperties": {
-			"url": "https://sgonpremtocloud.dfs.core.windows.net/"
+			"url": "https://sgonpremtocloudm.dfs.core.windows.net/"
 		}
 	}
 }
