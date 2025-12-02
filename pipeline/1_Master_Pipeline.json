@@ -5,8 +5,6 @@
 			{
 				"name": "execute_2_copy_hydration_file",
 				"type": "ExecutePipeline",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "lkp_conf_json",
@@ -68,8 +66,6 @@
 			{
 				"name": "lkp_conf_json",
 				"type": "Lookup",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "lkp_starting_logs",
@@ -118,8 +114,6 @@
 			{
 				"name": "execute_3_data_load_from_onpremise",
 				"type": "ExecutePipeline",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "execute_2_copy_hydration_file",
@@ -177,8 +171,6 @@
 			{
 				"name": "lkp_starting_logs",
 				"type": "Lookup",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "web_starting_mail",
@@ -375,8 +367,6 @@
 			{
 				"name": "stor_proc_call_end_logs_success",
 				"type": "SqlServerStoredProcedure",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "execute_3_data_load_from_onpremise",
