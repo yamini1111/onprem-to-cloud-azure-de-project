@@ -3,7 +3,10 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_adls_conn",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"storage_account": "sgonpremtocloudm"
+			}
 		},
 		"parameters": {
 			"folderPath": {
