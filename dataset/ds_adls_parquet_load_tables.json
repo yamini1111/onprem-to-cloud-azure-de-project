@@ -1,12 +1,9 @@
 {
-	"name": "ds_adls_csv_load_tables",
+	"name": "ds_adls_parquet_load_tables",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ls_adls_conn",
-			"type": "LinkedServiceReference",
-			"parameters": {
-				"storage_account": "sgonpremtocloudm"
-			}
+			"type": "LinkedServiceReference"
 		},
 		"parameters": {
 			"container": {
@@ -20,7 +17,7 @@
 			}
 		},
 		"annotations": [],
-		"type": "DelimitedText",
+		"type": "Parquet",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
@@ -37,10 +34,7 @@
 					"type": "Expression"
 				}
 			},
-			"columnDelimiter": ",",
-			"escapeChar": "\\",
-			"firstRowAsHeader": true,
-			"quoteChar": "\""
+			"compressionCodec": "snappy"
 		},
 		"schema": []
 	}

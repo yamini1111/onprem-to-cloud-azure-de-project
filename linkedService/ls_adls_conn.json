@@ -1,10 +1,16 @@
 {
 	"name": "ls_adls_conn",
 	"properties": {
+		"parameters": {
+			"storage_account": {
+				"type": "string",
+				"defaultValue": "sgonpremtocloudm"
+			}
+		},
 		"annotations": [],
 		"type": "AzureBlobFS",
 		"typeProperties": {
-			"url": "https://sgonpremtocloudm.dfs.core.windows.net/"
+			"url": "@{concat('https://',linkedService().storage_account,'.dfs.core.windows.net/')}"
 		}
 	}
 }
