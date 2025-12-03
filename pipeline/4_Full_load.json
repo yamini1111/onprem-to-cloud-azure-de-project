@@ -40,14 +40,12 @@
 									"partitionOption": "None"
 								},
 								"sink": {
-									"type": "DelimitedTextSink",
+									"type": "ParquetSink",
 									"storeSettings": {
 										"type": "AzureBlobFSWriteSettings"
 									},
 									"formatSettings": {
-										"type": "DelimitedTextWriteSettings",
-										"quoteAllText": true,
-										"fileExtension": ".txt"
+										"type": "ParquetWriteSettings"
 									}
 								},
 								"enableStaging": false,
@@ -78,7 +76,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "ds_adls_csv_load_tables",
+									"referenceName": "ds_adls_parquet_load_tables",
 									"type": "DatasetReference",
 									"parameters": {
 										"container": {
@@ -86,11 +84,11 @@
 											"type": "Expression"
 										},
 										"folderPath": {
-											"value": "@concat(substring(utcNow(), 0,4),'/',\n        substring(utcNow(), 5,2 ),'/',\n        substring(utcNow(), 8,2 ))",
+											"value": "@concat(substring(utcNow(),0,4 ),'/',\n        substring(utcNow(),5,2 ),'/',\n        substring(utcNow(),8,2))",
 											"type": "Expression"
 										},
 										"fileName": {
-											"value": "@concat(item().sourceSchema,'_',\n        item().sourceTableName,'.csv')",
+											"value": "@concat(item().sourceSchema,'_',item().sourceTable)",
 											"type": "Expression"
 										}
 									}
@@ -264,7 +262,10 @@
 										"type": "Int32"
 									},
 									"p_ParentID": {
-										"value": "@activity('lkp_starting_logs').output.value[0].ID",
+										"value": {
+											"value": "@activity('lkp_starting_logs').output.value[0].ID",
+											"type": "Expression"
+										},
 										"type": "Int32"
 									},
 									"p_RowsCopied": {
@@ -303,7 +304,10 @@
 										"type": "String"
 									},
 									"p_Status": {
-										"value": "@pipeline().parameters.statusSuccess",
+										"value": {
+											"value": "@pipeline().parameters.statusSuccess",
+											"type": "Expression"
+										},
 										"type": "String"
 									}
 								}
@@ -392,7 +396,10 @@
 										"type": "Int32"
 									},
 									"p_ParentID": {
-										"value": "@activity('lkp_starting_logs').output.value[0].ID",
+										"value": {
+											"value": "@activity('lkp_starting_logs').output.value[0].ID",
+											"type": "Expression"
+										},
 										"type": "Int32"
 									},
 									"p_RowsCopied": {
