@@ -374,6 +374,7 @@
 					{
 						"activity": "execute_3_data_load_from_onpremise",
 						"dependencyConditions": [
+							"Skipped",
 							"Completed"
 						]
 					}

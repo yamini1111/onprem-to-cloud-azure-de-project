@@ -374,7 +374,10 @@
 							"type": "Int32"
 						},
 						"p_ParentID": {
-							"value": "@activity('lkp_starting_logs').output.value[0].ID",
+							"value": {
+								"value": "@activity('lkp_starting_logs').output.value[0].ID",
+								"type": "Expression"
+							},
 							"type": "Int32"
 						},
 						"p_RowsCopied": {
@@ -413,7 +416,10 @@
 							"type": "String"
 						},
 						"p_Status": {
-							"value": "@pipeline().parameters.statusSuccess",
+							"value": {
+								"value": "@pipeline().parameters.statusSuccess",
+								"type": "Expression"
+							},
 							"type": "String"
 						}
 					}
@@ -502,7 +508,10 @@
 							"type": "Int32"
 						},
 						"p_ParentID": {
-							"value": "@activity('lkp_starting_logs').output.value[0].ID",
+							"value": {
+								"value": "@activity('lkp_starting_logs').output.value[0].ID",
+								"type": "Expression"
+							},
 							"type": "Int32"
 						},
 						"p_RowsCopied": {
@@ -620,7 +629,7 @@
 						},
 						"p_ErrorMessage": {
 							"value": {
-								"value": "@activity('copy_hydration_file_from_sharepoint_to_dl').output.error[0].Message",
+								"value": "@activity('copy_hydration_file_from_sharepoint_to_dl').output.errors[0].Message",
 								"type": "Expression"
 							},
 							"type": "String"
@@ -633,7 +642,10 @@
 							"type": "Int32"
 						},
 						"p_ParentID": {
-							"value": "@activity('lkp_starting_logs').output.value[0].ID",
+							"value": {
+								"value": "@activity('lkp_starting_logs').output.value[0].ID",
+								"type": "Expression"
+							},
 							"type": "Int32"
 						},
 						"p_RowsCopied": {
