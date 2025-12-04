@@ -508,7 +508,7 @@
 									},
 									"p_ErrorMessage": {
 										"value": {
-											"value": "@if(equals(activity('copy_hydration_file_from_sharepoint_to_dl').Status, 'Failed'),activity('copy_hydration_file_from_sharepoint_to_dl').output.error[0].Message,\nactivity('copy_hydration_file_from_dl_to_table').output.error[0].Message)",
+											"value": "@if(equals(activity('copy_hydration_file_from_sharepoint_to_dl').Status, 'Failed'),activity('copy_hydration_file_from_sharepoint_to_dl').output.errors[0].Message,\nactivity('copy_hydration_file_from_dl_to_table').output.errors[0].Message)",
 											"type": "Expression"
 										},
 										"type": "String"
