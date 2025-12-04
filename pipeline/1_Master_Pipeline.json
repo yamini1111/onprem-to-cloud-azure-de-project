@@ -114,8 +114,6 @@
 			{
 				"name": "execute_3_data_load_from_onpremise",
 				"type": "ExecutePipeline",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "execute_2_copy_hydration_file",
