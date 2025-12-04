@@ -529,7 +529,7 @@
 									},
 									"p_RowsCopied": {
 										"value": {
-											"value": "@if(equals(activity('copy_hydration_file_from_sharepoint_to_dl').Status, 'Failed'),activity('copy_hydration_file_from_sharepoint_to_dl').output.rowsCopied,\nactivity('copy_hydration_file_from_dl_to_table').output.rowsCopied)",
+											"value": "@if(equals(activity('copy_hydration_file_from_sharepoint_to_dl').Status, 'Failed'),activity('copy_hydration_file_from_sharepoint_to_dl').output.rowsRead,\nactivity('copy_hydration_file_from_dl_to_table').output.rowsRead)",
 											"type": "Expression"
 										},
 										"type": "String"
