@@ -788,6 +788,26 @@
 									"type": "Expression"
 								}
 							}
+						},
+						{
+							"name": "fail_master_pipeline",
+							"type": "Fail",
+							"dependsOn": [
+								{
+									"activity": "web_fail_tbl_mail",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"message": {
+									"value": "@concat(\n    'Pipeline ',\n    pipeline().Pipeline,\n    ' has failed. Refer Pipeline Run Id: ',\n    pipeline().RunId\n)",
+									"type": "Expression"
+								},
+								"errorCode": "0"
+							}
 						}
 					]
 				}
