@@ -696,6 +696,26 @@
 					"referenceName": "ls_azsql_non_param",
 					"type": "LinkedServiceReference"
 				}
+			},
+			{
+				"name": "If Condition1",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "copy_hydration_file_from_dl_to_table",
+						"dependencyConditions": [
+							"Completed",
+							"Skipped"
+						]
+					},
+					{
+						"activity": "copy_hydration_file_from_sharepoint_to_dl",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": []
 			}
 		],
 		"parameters": {
