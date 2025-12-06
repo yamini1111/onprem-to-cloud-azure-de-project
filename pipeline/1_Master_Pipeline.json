@@ -839,7 +839,49 @@
 						"referenceName": "6_silver_notebooks_execution",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"p_SilverNotebookGeneric": {
+							"value": "@activity('lkp_conf_json').output.value[0].silverGenericNotebookPath",
+							"type": "Expression"
+						},
+						"p_SilverContainer": {
+							"value": "@activity('lkp_conf_json').output.value[0].silverContainer",
+							"type": "Expression"
+						},
+						"p_BronzeContainer": {
+							"value": "@activity('lkp_conf_json').output.value[0].bronzeContainer",
+							"type": "Expression"
+						},
+						"p_StorageAccount": {
+							"value": "@activity('lkp_conf_json').output.value[0].storageAccount",
+							"type": "Expression"
+						},
+						"p_CatalogName": {
+							"value": "@activity('lkp_conf_json').output.value[0].catalog",
+							"type": "Expression"
+						},
+						"p_SilverSchema": {
+							"value": "@activity('lkp_conf_json').output.value[0].silverSchema",
+							"type": "Expression"
+						},
+						"p_BronzeSchema": {
+							"value": "@activity('lkp_conf_json').output.value[0].bronzeSchema",
+							"type": "Expression"
+						},
+						"p_azsqlUsername": {
+							"value": "@activity('lkp_conf_json').output.value[0].azsqlUsername",
+							"type": "Expression"
+						},
+						"p_azsqlSchema": {
+							"value": "@activity('lkp_conf_json').output.value[0].azsqlSchema",
+							"type": "Expression"
+						},
+						"p_azsqlTablelist": {
+							"value": "@activity('lkp_conf_json').output.value[0].tablelist",
+							"type": "Expression"
+						}
+					}
 				}
 			}
 		],

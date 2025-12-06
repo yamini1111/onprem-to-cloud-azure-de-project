@@ -5,7 +5,14 @@
 			{
 				"name": "for_silver_notebooks_call",
 				"type": "ForEach",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "lkp_fetch_tablelist",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
@@ -38,11 +45,79 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "lkp_fetch_tablelist",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_sql_cloud_dev",
+						"type": "DatasetReference",
+						"parameters": {
+							"username": {
+								"value": "@pipeline().parameters.p_azsqlUsername",
+								"type": "Expression"
+							},
+							"schema": {
+								"value": "@pipeline().parameters.p_azsqlSchema",
+								"type": "Expression"
+							},
+							"table": {
+								"value": "@pipeline().parameters.p_azsqlTablelist",
+								"type": "Expression"
+							}
+						}
+					}
+				}
 			}
 		],
 		"parameters": {
-			"silverNotebooks": {
+			"p_SilverNotebooks": {
 				"type": "array"
+			},
+			"p_SilverNotebookGeneric": {
+				"type": "string"
+			},
+			"p_SilverContainer": {
+				"type": "string"
+			},
+			"p_BronzeContainer": {
+				"type": "string"
+			},
+			"p_StorageAccount": {
+				"type": "string"
+			},
+			"p_CatalogName": {
+				"type": "string"
+			},
+			"p_SilverSchema": {
+				"type": "string"
+			},
+			"p_BronzeSchema": {
+				"type": "string"
+			},
+			"p_azsqlUsername": {
+				"type": "string"
+			},
+			"p_azsqlSchema": {
+				"type": "string"
+			},
+			"p_azsqlTablelist": {
+				"type": "string"
 			}
 		},
 		"annotations": []
