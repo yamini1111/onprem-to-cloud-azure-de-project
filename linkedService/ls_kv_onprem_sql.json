@@ -23,7 +23,7 @@
 			}
 		},
 		"connectVia": {
-			"referenceName": "SHIR-onprem-to-cloud-migration",
+			"referenceName": "SHIR-OnpremToCloudMigration",
 			"type": "IntegrationRuntimeReference"
 		}
 	}
