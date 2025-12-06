@@ -1,0 +1,6 @@
+{
+	"name": "SHIR-OnpremToCloudMigration",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}
