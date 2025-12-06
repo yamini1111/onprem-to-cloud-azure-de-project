@@ -855,7 +855,7 @@
 			},
 			"mailURL": {
 				"type": "String",
-				"defaultValue": "https://prod-00.northcentralus.logic.azure.com:443/workflows/79bd6ffb4b244869aa87c7dbcb7db1e6/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=oCFtEy4yMUrW8pLT0nHgy6b9RpDxhMXsdLZMRi-39pw"
+				"defaultValue": "https://prod-08.northcentralus.logic.azure.com:443/workflows/bf76a9f9f3534fcc8a7cab9e8d779efd/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=oE6N8dEq7frWPr9AKANWuRIWdSDon0sVoMjYlUhZCDA"
 			}
 		},
 		"annotations": []
