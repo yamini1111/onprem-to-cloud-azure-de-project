@@ -1,0 +1,19 @@
+{
+	"name": "ls_azdbc_conn",
+	"properties": {
+		"annotations": [],
+		"type": "AzureDatabricks",
+		"typeProperties": {
+			"domain": "https://adb-1458467033764139.19.azuredatabricks.net",
+			"accessToken": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "ls_azkv_onprem",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "akv-azdbc-access-token"
+			},
+			"existingClusterId": "1206-061009-9ue1aqaq"
+		}
+	}
+}
