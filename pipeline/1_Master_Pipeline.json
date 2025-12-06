@@ -377,6 +377,13 @@
 							"Skipped",
 							"Completed"
 						]
+					},
+					{
+						"activity": "execute_6_databricks_silver_notebooks",
+						"dependencyConditions": [
+							"Skipped",
+							"Completed"
+						]
 					}
 				],
 				"userProperties": [],
@@ -810,6 +817,29 @@
 							}
 						}
 					]
+				}
+			},
+			{
+				"name": "execute_6_databricks_silver_notebooks",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "execute_3_data_load_from_onpremise",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "6_silver_notebooks_execution",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
 				}
 			}
 		],

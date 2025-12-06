@@ -1,0 +1,28 @@
+{
+	"name": "6_silver_notebooks_execution",
+	"properties": {
+		"activities": [
+			{
+				"name": "silver_notebooks_execution",
+				"type": "DatabricksNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/malathi2175@outlook.com/onprem-to-cloud-azure-de-project/databricks/Silver Notebooks/01_Silver_OnpremToCloud_Customers"
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_azdbc_conn",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": []
+	}
+}
