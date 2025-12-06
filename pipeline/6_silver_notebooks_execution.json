@@ -3,26 +3,48 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "silver_notebooks_execution",
-				"type": "DatabricksNotebook",
+				"name": "for_silver_notebooks_call",
+				"type": "ForEach",
 				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebookPath": "/Users/malathi2175@outlook.com/onprem-to-cloud-azure-de-project/databricks/Silver Notebooks/01_Silver_OnpremToCloud_Customers"
-				},
-				"linkedServiceName": {
-					"referenceName": "ls_azdbc_conn",
-					"type": "LinkedServiceReference"
+					"items": {
+						"value": "@pipeline().parameters.silverNotebooks",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "silver_notebooks_execution",
+							"type": "DatabricksNotebook",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": {
+									"value": "@item()",
+									"type": "Expression"
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_azdbc_conn",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
 				}
 			}
 		],
+		"parameters": {
+			"silverNotebooks": {
+				"type": "array"
+			}
+		},
 		"annotations": []
 	}
 }
