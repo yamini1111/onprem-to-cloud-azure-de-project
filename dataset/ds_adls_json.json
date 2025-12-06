@@ -5,7 +5,7 @@
 			"referenceName": "ls_adls_conn",
 			"type": "LinkedServiceReference",
 			"parameters": {
-				"storage_account": "sgonpremtocloudm"
+				"storage_account": "sgonpremtoclouddev"
 			}
 		},
 		"parameters": {
