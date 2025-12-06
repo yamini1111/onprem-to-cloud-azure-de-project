@@ -4,8 +4,8 @@
 		"annotations": [],
 		"type": "AzureSqlDatabase",
 		"typeProperties": {
-			"server": "azsql-onprem-to-cloud.database.windows.net",
-			"database": "azsql-dev-db",
+			"server": "azsql-server-onprem-to-cloud.database.windows.net",
+			"database": "azdbonpremtocloud",
 			"encrypt": "mandatory",
 			"trustServerCertificate": false,
 			"authenticationType": "SQL",
