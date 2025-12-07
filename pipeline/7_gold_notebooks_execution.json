@@ -132,7 +132,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"notebookPath": {
-									"value": "@item.NotebookPath",
+									"value": "@item().NotebookPath",
 									"type": "Expression"
 								},
 								"baseParameters": {
