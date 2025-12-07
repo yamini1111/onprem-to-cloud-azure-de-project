@@ -45,7 +45,7 @@
 										"userProperties": [],
 										"typeProperties": {
 											"notebookPath": {
-												"value": "@item()",
+												"value": "@item().CustomNotebookPath",
 												"type": "Expression"
 											}
 										},
@@ -100,27 +100,15 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT \n    s.* \nFROM @{pipeline().parameters.p_azsqlSchema}.@{pipeline().parameters.p_azsqlSilverNotebooksTable} s\nJOIN @{pipeline().parameters.p_azsqlSchema}.@{pipeline().parameters.p_azsqlTablelist} t \nON s.sourceSchema=t.sourceSchema\nand s.sourceTable=t.sourceTableName\nAND [Status] = 1;",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "ds_sql_cloud_dev",
-						"type": "DatasetReference",
-						"parameters": {
-							"username": {
-								"value": "@pipeline().parameters.p_azsqlUsername",
-								"type": "Expression"
-							},
-							"schema": {
-								"value": "@pipeline().parameters.p_azsqlSchema",
-								"type": "Expression"
-							},
-							"table": {
-								"value": "@pipeline().parameters.p_azsqlTablelist",
-								"type": "Expression"
-							}
-						}
-					}
+						"referenceName": "ds_azsql_call_proc",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
 				}
 			}
 		],
@@ -153,6 +141,9 @@
 				"type": "string"
 			},
 			"p_azsqlTablelist": {
+				"type": "string"
+			},
+			"p_azsqlSilverNotebooksTable": {
 				"type": "string"
 			}
 		},
