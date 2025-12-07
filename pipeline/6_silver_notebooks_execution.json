@@ -54,6 +54,36 @@
 											"notebookPath": {
 												"value": "@item().CustomNotebookPath",
 												"type": "Expression"
+											},
+											"baseParameters": {
+												"p_bronzeContainer": {
+													"value": "@pipeline().parameters.p_BronzeContainer",
+													"type": "Expression"
+												},
+												"p_silverContainer": {
+													"value": "@pipeline().parameters.p_SilverContainer",
+													"type": "Expression"
+												},
+												"p_sgAccount": {
+													"value": "@pipeline().parameters.p_StorageAccount",
+													"type": "Expression"
+												},
+												"p_sourceSchema": {
+													"value": "@activity('lkp_fetch_tablelist').output.value[0].sourceSchema",
+													"type": "Expression"
+												},
+												"p_sourceTable": {
+													"value": "@activity('lkp_fetch_tablelist').output.value[0].sourceTable",
+													"type": "Expression"
+												},
+												"p_catalogName": {
+													"value": "@pipeline().parameters.p_CatalogName",
+													"type": "Expression"
+												},
+												"p_silverSchema": {
+													"value": "@pipeline().parameters.p_SilverSchema",
+													"type": "Expression"
+												}
 											}
 										},
 										"linkedServiceName": {
@@ -298,6 +328,36 @@
 											"notebookPath": {
 												"value": "@pipeline().parameters.p_SilverNotebookGeneric",
 												"type": "Expression"
+											},
+											"baseParameters": {
+												"p_bronzeContainer": {
+													"value": "@pipeline().parameters.p_BronzeContainer",
+													"type": "Expression"
+												},
+												"p_silverContainer": {
+													"value": "@pipeline().parameters.p_SilverContainer",
+													"type": "Expression"
+												},
+												"p_sgAccount": {
+													"value": "@pipeline().parameters.p_StorageAccount",
+													"type": "Expression"
+												},
+												"p_sourceSchema": {
+													"value": "@activity('lkp_fetch_tablelist').output.value[0].sourceSchema",
+													"type": "Expression"
+												},
+												"p_sourceTable": {
+													"value": "@activity('lkp_fetch_tablelist').output.value[0].sourceTable",
+													"type": "Expression"
+												},
+												"p_catalogName": {
+													"value": "@pipeline().parameters.p_CatalogName",
+													"type": "Expression"
+												},
+												"p_silverSchema": {
+													"value": "@pipeline().parameters.p_SilverSchema",
+													"type": "Expression"
+												}
 											}
 										},
 										"linkedServiceName": {
@@ -356,7 +416,7 @@
 												},
 												"p_ErrorMessage": {
 													"value": {
-														"value": "@concat('Run Page URL: ',activity('silver_notebooks_execution_generic').output.runPageURL,decodeUriComponent('%0A'),'Run Error: ',activity('silver_notebooks_execution_generic').output.runError)",
+														"value": "@concat('Run Page URL: ',activity('silver_notebooks_execution_generic').output.runPageURL,decodeUriComponent('%0A%0D'),'Run Error: ',activity('silver_notebooks_execution_generic').output.runError)",
 														"type": "Expression"
 													},
 													"type": "String"
@@ -420,7 +480,7 @@
 										"userProperties": [],
 										"typeProperties": {
 											"message": {
-												"value": "@concat('Run Page URL: ',activity('silver_notebooks_execution_generic').output.runPageURL,decodeUriComponent('%0A'),'Run Error: ',activity('silver_notebooks_execution_generic').output.runError)\n",
+												"value": "@concat('Run Page URL: ',activity('silver_notebooks_execution_generic').output.runPageURL,decodeUriComponent('%0A%0D'),'Run Error: ',activity('silver_notebooks_execution_generic').output.runError)\n",
 												"type": "Expression"
 											},
 											"errorCode": "0"
