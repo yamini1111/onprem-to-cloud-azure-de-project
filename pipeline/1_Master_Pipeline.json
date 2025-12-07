@@ -384,6 +384,13 @@
 							"Skipped",
 							"Completed"
 						]
+					},
+					{
+						"activity": "execute_7_databricks_gold_notebooks",
+						"dependencyConditions": [
+							"Skipped",
+							"Completed"
+						]
 					}
 				],
 				"userProperties": [],
@@ -885,7 +892,76 @@
 							"value": "@activity('lkp_conf_json').output.value[0].azsqlSilverNotebooksTable",
 							"type": "Expression"
 						},
-						"p_ParentID": "@activity('lkp_starting_logs').output.value[0].ID",
+						"p_ParentID": {
+							"value": "@activity('lkp_starting_logs').output.value[0].ID",
+							"type": "Expression"
+						},
+						"p_statusSuccess": {
+							"value": "@variables('statusSuccess')",
+							"type": "Expression"
+						},
+						"p_statusFail": {
+							"value": "@variables('statusFail')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "execute_7_databricks_gold_notebooks",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "execute_6_databricks_silver_notebooks",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "7_gold_notebooks_execution",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"p_GoldNotebookTables": {
+							"value": "@activity('lkp_conf_json').output.value[0].azsqlGoldNotebooksTable",
+							"type": "Expression"
+						},
+						"p_SilverContainer": "@activity('lkp_conf_json').output.value[0].silverContainer",
+						"p_StorageAccount": {
+							"value": "@activity('lkp_conf_json').output.value[0].storageAccount",
+							"type": "Expression"
+						},
+						"p_CatalogName": {
+							"value": "@activity('lkp_conf_json').output.value[0].catalog",
+							"type": "Expression"
+						},
+						"p_SilverSchema": {
+							"value": "@activity('lkp_conf_json').output.value[0].silverSchema",
+							"type": "Expression"
+						},
+						"p_azsqlUsername": {
+							"value": "@activity('lkp_conf_json').output.value[0].azsqlUsername",
+							"type": "Expression"
+						},
+						"p_azsqlSchema": {
+							"value": "@activity('lkp_conf_json').output.value[0].azsqlSchema",
+							"type": "Expression"
+						},
+						"p_azsqlTablelist": {
+							"value": "@activity('lkp_conf_json').output.value[0].tablelist",
+							"type": "Expression"
+						},
+						"p_ParentID": {
+							"value": "@activity('lkp_starting_logs').output.value[0].ID",
+							"type": "Expression"
+						},
 						"p_statusSuccess": {
 							"value": "@variables('statusSuccess')",
 							"type": "Expression"
