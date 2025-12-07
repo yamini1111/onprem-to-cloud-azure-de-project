@@ -1,0 +1,51 @@
+{
+	"name": "temp_pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "lkp_fetch_tablelist",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@concat('SELECT s.* FROM ',pipeline().parameters.p_azsqlSchema,'.',pipeline().parameters.p_azsqlSilverNotebooksTable,' as s JOIN ',pipeline().parameters.p_azsqlSchema,'.',pipeline().parameters.p_azsqlTablelist, ' as t ON s.sourceSchema=t.sourceSchema and s.sourceTable=t.sourceTableName AND [Status] = 1')",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_azsql_call_proc",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"parameters": {
+			"p_azsqlSilverNotebooksTable": {
+				"type": "string",
+				"defaultValue": "silverNotebooksList"
+			},
+			"p_azsqlSchema": {
+				"type": "string",
+				"defaultValue": "schclouddev"
+			},
+			"p_azsqlTablelist": {
+				"type": "string",
+				"defaultValue": "tablelist"
+			}
+		},
+		"annotations": []
+	}
+}

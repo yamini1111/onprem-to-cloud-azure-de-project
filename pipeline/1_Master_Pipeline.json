@@ -5,6 +5,8 @@
 			{
 				"name": "execute_2_copy_hydration_file",
 				"type": "ExecutePipeline",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "lkp_conf_json",
@@ -114,6 +116,8 @@
 			{
 				"name": "execute_3_data_load_from_onpremise",
 				"type": "ExecutePipeline",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "execute_2_copy_hydration_file",
@@ -879,6 +883,19 @@
 						},
 						"p_azsqlTablelist": {
 							"value": "@activity('lkp_conf_json').output.value[0].tablelist",
+							"type": "Expression"
+						},
+						"p_azsqlSilverNotebooksTable": {
+							"value": "@activity('lkp_conf_json').output.value[0].azsqlSilverNotebooksTable",
+							"type": "Expression"
+						},
+						"p_ParentID": "@activity('lkp_starting_logs').output.value[0].ID",
+						"p_statusSuccess": {
+							"value": "@variables('statusSuccess')",
+							"type": "Expression"
+						},
+						"p_statusFail": {
+							"value": "@variables('statusFail')",
 							"type": "Expression"
 						}
 					}
