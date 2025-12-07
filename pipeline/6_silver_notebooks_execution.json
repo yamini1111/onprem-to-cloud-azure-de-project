@@ -112,7 +112,7 @@
 												},
 												"p_ErrorMessage": {
 													"value": {
-														"value": "@concat('Run Page URL: ',activity('silver_notebooks_execution_specific').output.runPageURL,'\\nRun Error: ',activity('silver_notebooks_execution_specific').output.runError)",
+														"value": "@concat('Run Page URL: ',activity('silver_notebooks_execution_specific').output.runPageURL,decodeUriComponent('%0A'),'Run Error: ',activity('silver_notebooks_execution_specific').output.runError)",
 														"type": "Expression"
 													},
 													"type": "String"
@@ -176,7 +176,7 @@
 										"userProperties": [],
 										"typeProperties": {
 											"message": {
-												"value": "@concat('Run Page URL: ',activity('silver_notebooks_execution_specific').output.runPageURL,'\\nRun Error: ',activity('silver_notebooks_execution_specific').output.runError)\n",
+												"value": "@concat('Run Page URL: ',activity('silver_notebooks_execution_specific').output.runPageURL,decodeUriComponent('%0A'),'Run Error: ',activity('silver_notebooks_execution_specific').output.runError)\n",
 												"type": "Expression"
 											},
 											"errorCode": "0"
@@ -356,7 +356,7 @@
 												},
 												"p_ErrorMessage": {
 													"value": {
-														"value": "@concat('Run Page URL: ',activity('silver_notebooks_execution_generic').output.runPageURL,'\\nRun Error: ',activity('silver_notebooks_execution_generic').output.runError)",
+														"value": "@concat('Run Page URL: ',activity('silver_notebooks_execution_generic').output.runPageURL,decodeUriComponent('%0A'),'Run Error: ',activity('silver_notebooks_execution_generic').output.runError)",
 														"type": "Expression"
 													},
 													"type": "String"
@@ -420,7 +420,7 @@
 										"userProperties": [],
 										"typeProperties": {
 											"message": {
-												"value": "@concat('Run Page URL: ',activity('silver_notebooks_execution_generic').output.runPageURL,'\\nRun Error: ',activity('silver_notebooks_execution_generic').output.runError)\n",
+												"value": "@concat('Run Page URL: ',activity('silver_notebooks_execution_generic').output.runPageURL,decodeUriComponent('%0A'),'Run Error: ',activity('silver_notebooks_execution_generic').output.runError)\n",
 												"type": "Expression"
 											},
 											"errorCode": "0"
