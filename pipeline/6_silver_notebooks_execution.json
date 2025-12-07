@@ -159,7 +159,7 @@
 												},
 												"p_ParentID": {
 													"value": {
-														"value": "@pipeline().parameters.p_ParentID",
+														"value": "@activity('lkp_starting_logs').output.value[0].ID\n",
 														"type": "Expression"
 													},
 													"type": "Int32"
@@ -255,7 +255,7 @@
 												},
 												"p_ParentID": {
 													"value": {
-														"value": "@pipeline().parameters.p_ParentID",
+														"value": "@activity('lkp_starting_logs').output.value[0].ID\n",
 														"type": "Expression"
 													},
 													"type": "Int32"
