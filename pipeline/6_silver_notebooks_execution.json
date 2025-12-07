@@ -56,31 +56,31 @@
 												"type": "Expression"
 											},
 											"baseParameters": {
-												"p_bronzeContainer": {
+												"bronze_container": {
 													"value": "@pipeline().parameters.p_BronzeContainer",
 													"type": "Expression"
 												},
-												"p_silverContainer": {
+												"silver_container": {
 													"value": "@pipeline().parameters.p_SilverContainer",
 													"type": "Expression"
 												},
-												"p_sgAccount": {
+												"sgaccount": {
 													"value": "@pipeline().parameters.p_StorageAccount",
 													"type": "Expression"
 												},
-												"p_sourceSchema": {
+												"source_schema": {
 													"value": "@item().sourceSchema",
 													"type": "Expression"
 												},
-												"p_sourceTable": {
+												"source_table": {
 													"value": "@item().sourceTable",
 													"type": "Expression"
 												},
-												"p_catalogName": {
+												"CATALOG": {
 													"value": "@pipeline().parameters.p_CatalogName",
 													"type": "Expression"
 												},
-												"p_silverSchema": {
+												"SILVER_SCHEMA": {
 													"value": "@pipeline().parameters.p_SilverSchema",
 													"type": "Expression"
 												}
