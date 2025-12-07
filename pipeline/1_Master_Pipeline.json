@@ -396,7 +396,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@or(\n    or(\n        not(equals(activity('execute_2_copy_hydration_file').Status, 'Succeeded')),\n        not(equals(activity('execute_3_data_load_from_onpremise').Status, 'Succeeded'))\n        ),\n        not(equals(activity('execute_6_databricks_silver_notebooks').Status, 'Succeeded'))\n)\n\n",
+						"value": "@or(\n    or(\n        or(\n            not(equals(activity('execute_2_copy_hydration_file').Status, 'Succeeded')),\n            not(equals(activity('execute_3_data_load_from_onpremise').Status, 'Succeeded'))\n            ),\n            not(equals(activity('execute_6_databricks_silver_notebooks').Status, 'Succeeded'))\n            ),\n        not(equals(activity('execute_7_databricks_gold_notebooks').Status, 'Succeeded'))\n    )\n",
 						"type": "Expression"
 					},
 					"ifFalseActivities": [
