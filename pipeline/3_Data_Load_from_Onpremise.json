@@ -511,7 +511,10 @@
 							],
 							"userProperties": [],
 							"typeProperties": {
-								"message": "@concat('Pipeline ',pipeline().Pipeline,'has been failed. Refer the pipline run id: ',pipeline().RunId)",
+								"message": {
+									"value": "@concat('Pipeline ',pipeline().Pipeline,'has been failed. Refer the pipline run id: ',pipeline().RunId)",
+									"type": "Expression"
+								},
 								"errorCode": "0"
 							}
 						}

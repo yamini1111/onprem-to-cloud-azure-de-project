@@ -5,8 +5,6 @@
 			{
 				"name": "execute_2_copy_hydration_file",
 				"type": "ExecutePipeline",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "lkp_conf_json",
@@ -116,8 +114,6 @@
 			{
 				"name": "execute_3_data_load_from_onpremise",
 				"type": "ExecutePipeline",
-				"state": "Inactive",
-				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "execute_2_copy_hydration_file",
@@ -393,7 +389,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"expression": {
-						"value": "@or(\n    not(equals(activity('execute_2_copy_hydration_file').Status, 'Succeeded')),\n    not(equals(activity('execute_3_data_load_from_onpremise').Status, 'Succeeded'))\n)\n",
+						"value": "@or(\n    or(\n        not(equals(activity('execute_2_copy_hydration_file').Status, 'Succeeded')),\n        not(equals(activity('execute_3_data_load_from_onpremise').Status, 'Succeeded'))\n        ),\n        not(equals(activity('execute_6_databricks_silver_notebooks').Status, 'Succeeded'))\n)\n\n",
 						"type": "Expression"
 					},
 					"ifFalseActivities": [
