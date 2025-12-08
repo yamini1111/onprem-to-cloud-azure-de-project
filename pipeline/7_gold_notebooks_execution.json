@@ -144,20 +144,12 @@
 										"value": "@pipeline().parameters.p_StorageAccount",
 										"type": "Expression"
 									},
-									"source_schema": {
+									"target_schema": {
 										"value": "@item().TargetSchema",
 										"type": "Expression"
 									},
-									"source_table": {
+									"target_table": {
 										"value": "@item().TargetTable",
-										"type": "Expression"
-									},
-									"CATALOG": {
-										"value": "@pipeline().parameters.p_CatalogName",
-										"type": "Expression"
-									},
-									"SILVER_SCHEMA": {
-										"value": "@pipeline().parameters.p_SilverSchema",
 										"type": "Expression"
 									}
 								}
